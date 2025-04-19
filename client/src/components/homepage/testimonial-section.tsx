@@ -24,18 +24,18 @@ const testimonials = [
 
 export default function TestimonialSection() {
   return (
-    <section className="py-12 bg-white">
+    <section className="py-12 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold text-gray-900">Trusted by Developers</h2>
-          <p className="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
+          <h2 className="text-3xl font-bold">Trusted by Developers</h2>
+          <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
             Join thousands of hobbyist developers who are saving time and making money with CodeCraft templates.
           </p>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
-            <Card key={index} className="bg-gray-50">
+            <Card key={index} className="bg-secondary/50">
               <CardContent className="p-6">
                 <div className="flex items-center mb-4">
                   <div className="flex text-yellow-400">
@@ -44,16 +44,16 @@ export default function TestimonialSection() {
                     ))}
                   </div>
                 </div>
-                <blockquote className="text-gray-700 mb-4">
+                <blockquote className="text-foreground mb-4">
                   "{testimonial.quote}"
                 </blockquote>
                 <div className="flex items-center">
-                  <div className="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center text-gray-700 font-medium">
+                  <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground font-medium">
                     {testimonial.initials}
                   </div>
                   <div className="ml-3">
-                    <p className="text-sm font-medium text-gray-900">{testimonial.author}</p>
-                    <p className="text-xs text-gray-500">{testimonial.role}</p>
+                    <p className="text-sm font-medium">{testimonial.author}</p>
+                    <p className="text-xs text-muted-foreground">{testimonial.role}</p>
                   </div>
                 </div>
               </CardContent>

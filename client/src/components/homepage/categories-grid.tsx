@@ -38,7 +38,7 @@ export default function CategoriesGrid() {
 
   if (isLoading) {
     return (
-      <section className="py-12 bg-gray-50">
+      <section className="py-12 bg-muted/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Skeleton className="h-8 w-64 mb-8" />
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -49,7 +49,7 @@ export default function CategoriesGrid() {
                   <Skeleton className="h-6 w-32 mb-1" />
                   <Skeleton className="h-4 w-full" />
                 </CardContent>
-                <CardFooter className="bg-gray-50 px-6 py-2">
+                <CardFooter className="bg-muted/50 px-6 py-2">
                   <Skeleton className="h-4 w-24" />
                 </CardFooter>
               </Card>
@@ -62,10 +62,10 @@ export default function CategoriesGrid() {
 
   if (error) {
     return (
-      <section className="py-12 bg-gray-50">
+      <section className="py-12 bg-muted/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <p className="text-red-500">Failed to load categories</p>
+            <p className="text-destructive">Failed to load categories</p>
           </div>
         </div>
       </section>
@@ -73,19 +73,19 @@ export default function CategoriesGrid() {
   }
 
   return (
-    <section className="py-12 bg-gray-50">
+    <section className="py-12 bg-muted/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-8">Browse by Category</h2>
+        <h2 className="text-2xl font-bold mb-8">Browse by Category</h2>
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {categories && categories.map((category) => (
             <Link key={category.id} href={`/browse?category=${category.id}`}>
-              <Card className="group flex flex-col justify-between bg-white shadow-sm rounded-lg overflow-hidden hover:shadow-md transition-shadow duration-200 cursor-pointer h-full">
+              <Card className="group flex flex-col justify-between overflow-hidden hover:shadow-md transition-shadow duration-200 cursor-pointer h-full">
                 <CardContent className="p-6">
                   <div 
                     className={`h-12 w-12 rounded-lg flex items-center justify-center mb-4`}
                     style={{ 
-                      backgroundColor: `${category.color}20`,
-                      color: category.color
+                      backgroundColor: category.color ? `${category.color}20` : 'var(--primary)',
+                      color: category.color || 'var(--primary)'
                     }}
                   >
                     {category.iconName && IconMap[category.iconName] ? (
@@ -94,12 +94,12 @@ export default function CategoriesGrid() {
                       <Layout className="h-6 w-6" />
                     )}
                   </div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-1">{category.name}</h3>
-                  <p className="text-sm text-gray-500">{category.description}</p>
+                  <h3 className="text-lg font-medium mb-1">{category.name}</h3>
+                  <p className="text-sm text-muted-foreground">{category.description}</p>
                 </CardContent>
                 <CardFooter 
-                  className={`px-6 py-2 bg-gray-50 group-hover:bg-opacity-70 transition-colors duration-200`}
-                  style={{ color: category.color }}
+                  className="px-6 py-2 bg-muted/50 group-hover:bg-opacity-70 transition-colors duration-200"
+                  style={{ color: category.color || 'var(--primary)' }}
                 >
                   <span className="text-sm font-medium flex items-center">
                     {category.listingCount || 0} templates
