@@ -32,7 +32,7 @@ export default function FeaturedTemplates() {
             {[...Array(4)].map((_, i) => (
               <Card key={i} className="group relative overflow-hidden">
                 <Skeleton className="h-48 w-full" />
-                <CardContent className="p-4">
+                <CardContent>
                   <Skeleton className="h-6 w-3/4 mb-1" />
                   <Skeleton className="h-4 w-full mb-3" />
                   <div className="flex justify-between items-center">
@@ -91,15 +91,15 @@ export default function FeaturedTemplates() {
                         <span className="text-muted-foreground">No preview</span>
                       </div>
                     )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-between p-4">
+                    <div className="absolute inset-0 bg-background/70 opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-between p-4">
                       <Button variant="secondary" size="sm">
                         <Eye className="h-4 w-4 mr-1" />
                         Preview
                       </Button>
-                      <span className="text-white font-medium">${(listing.price / 100).toFixed(2)}</span>
+                      <span className="font-medium">${(listing.price / 100).toFixed(2)}</span>
                     </div>
                   </div>
-                  <CardContent className="p-4 flex-grow flex flex-col">
+                  <CardContent className="flex-grow flex flex-col">
                     <h3 className="text-lg font-semibold mb-1">{listing.title}</h3>
                     <p className="text-muted-foreground text-sm line-clamp-2 mb-3">{listing.description}</p>
                     <div className="flex justify-between items-center mt-auto">
@@ -112,7 +112,7 @@ export default function FeaturedTemplates() {
                       </div>
                       {listing.rating && (
                         <div className="flex items-center">
-                          <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
+                          <Star className="h-4 w-4 text-primary fill-primary" />
                           <span className="text-xs text-muted-foreground ml-1">{listing.rating.toFixed(1)}</span>
                         </div>
                       )}
