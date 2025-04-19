@@ -141,3 +141,7 @@ export type InsertReview = z.infer<typeof insertReviewSchema>;
 
 export type Quote = typeof quotes.$inferSelect;
 export type InsertQuote = z.infer<typeof insertQuoteSchema>;
+
+// Note: Relationships defined through foreign keys in table schemas
+// For version 0.39.1 of Drizzle ORM, we don't use the relations API
+// but can manually join tables in queries as needed

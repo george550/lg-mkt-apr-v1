@@ -4,12 +4,17 @@ import {
   Listing, InsertListing,
   Purchase, InsertPurchase,
   Review, InsertReview,
-  Quote, InsertQuote
+  Quote, InsertQuote,
+  users, categories, listings, purchases, reviews, quotes
 } from "@shared/schema";
 import session from "express-session";
 import createMemoryStore from "memorystore";
+import connectPg from "connect-pg-simple";
+import { db, pool } from "./db";
+import { and, asc, desc, eq, gte, ilike, lte, sql } from "drizzle-orm";
 
 const MemoryStore = createMemoryStore(session);
+const PostgresSessionStore = connectPg(session);
 
 interface ListingFilters {
   categoryId?: number;
@@ -61,7 +66,7 @@ export interface IStorage {
   }>;
   
   // Session store
-  sessionStore: session.SessionStore;
+  sessionStore: any;
 }
 
 export class MemStorage implements IStorage {
@@ -71,7 +76,7 @@ export class MemStorage implements IStorage {
   private purchases: Map<number, Purchase>;
   private reviews: Map<number, Review>;
   private quotes: Map<number, Quote>;
-  sessionStore: session.SessionStore;
+  sessionStore: any;
   
   private userIdCounter: number = 1;
   private categoryIdCounter: number = 1;
@@ -388,4 +393,345 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+export class DatabaseStorage implements IStorage {
+  sessionStore: any; // Will be properly typed once we fix the session store issue
+
+  constructor() {
+    this.sessionStore = new PostgresSessionStore({
+      pool,
+      createTableIfMissing: true
+    });
+  }
+
+  // User methods
+  async getUser(id: number): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user;
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users.username, username));
+    return user;
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const [user] = await db.insert(users).values(insertUser).returning();
+    return user;
+  }
+
+  // Category methods
+  async getAllCategories(): Promise<Category[]> {
+    return db.select().from(categories);
+  }
+
+  async getCategoryById(id: number): Promise<Category | undefined> {
+    const [category] = await db
+      .select()
+      .from(categories)
+      .where(eq(categories.id, id));
+    return category;
+  }
+
+  async createCategory(category: InsertCategory): Promise<Category> {
+    const [newCategory] = await db
+      .insert(categories)
+      .values(category)
+      .returning();
+    return newCategory;
+  }
+
+  // Listing methods
+  async getListings(filters: ListingFilters): Promise<Listing[]> {
+    const whereConditions = [];
+
+    if (filters.categoryId) {
+      whereConditions.push(eq(listings.categoryId, filters.categoryId));
+    }
+
+    if (filters.priceMin) {
+      whereConditions.push(gte(listings.price, filters.priceMin));
+    }
+
+    if (filters.priceMax) {
+      whereConditions.push(lte(listings.price, filters.priceMax));
+    }
+
+    if (filters.minRating) {
+      whereConditions.push(gte(listings.rating, filters.minRating));
+    }
+
+    if (filters.searchTerm) {
+      whereConditions.push(
+        ilike(listings.title, `%${filters.searchTerm}%`)
+      );
+    }
+
+    let query = db.select().from(listings);
+
+    if (whereConditions.length > 0) {
+      query = query.where(and(...whereConditions));
+    }
+
+    query = query.orderBy(desc(listings.createdAt));
+
+    const limit = filters.limit || 12;
+    const offset = filters.offset || 0;
+
+    query = query.limit(limit).offset(offset);
+
+    return query;
+  }
+
+  async getListingById(id: number): Promise<Listing | undefined> {
+    const [listing] = await db
+      .select()
+      .from(listings)
+      .where(eq(listings.id, id));
+    return listing;
+  }
+
+  async getFeaturedListings(limit = 4): Promise<Listing[]> {
+    return db
+      .select()
+      .from(listings)
+      .orderBy(desc(listings.rating))
+      .limit(limit);
+  }
+
+  async getListingsBySellerId(sellerId: number): Promise<Listing[]> {
+    return db
+      .select()
+      .from(listings)
+      .where(eq(listings.sellerId, sellerId))
+      .orderBy(desc(listings.createdAt));
+  }
+
+  async createListing(listing: InsertListing): Promise<Listing> {
+    const [newListing] = await db
+      .insert(listings)
+      .values({
+        ...listing,
+        rating: 0,
+        reviewCount: 0,
+        isVerified: false
+      })
+      .returning();
+
+    // Update category listing count
+    await db
+      .update(categories)
+      .set({
+        listingCount: sql`${categories.listingCount} + 1`
+      })
+      .where(eq(categories.id, listing.categoryId));
+
+    return newListing;
+  }
+
+  async updateListing(id: number, updates: Partial<InsertListing>): Promise<Listing> {
+    const [updatedListing] = await db
+      .update(listings)
+      .set({
+        ...updates,
+        updatedAt: new Date()
+      })
+      .where(eq(listings.id, id))
+      .returning();
+
+    if (!updatedListing) {
+      throw new Error("Listing not found");
+    }
+
+    return updatedListing;
+  }
+
+  async deleteListing(id: number): Promise<void> {
+    const [listing] = await db
+      .select()
+      .from(listings)
+      .where(eq(listings.id, id));
+
+    if (!listing) {
+      throw new Error("Listing not found");
+    }
+
+    // Delete the listing
+    await db.delete(listings).where(eq(listings.id, id));
+
+    // Update category listing count
+    await db
+      .update(categories)
+      .set({
+        listingCount: sql`GREATEST(0, ${categories.listingCount} - 1)`
+      })
+      .where(eq(categories.id, listing.categoryId));
+  }
+
+  // Purchase methods
+  async getPurchasesByBuyerId(buyerId: number): Promise<Purchase[]> {
+    return db
+      .select()
+      .from(purchases)
+      .where(eq(purchases.buyerId, buyerId))
+      .orderBy(desc(purchases.createdAt));
+  }
+
+  async createPurchase(purchase: InsertPurchase): Promise<Purchase> {
+    const [newPurchase] = await db
+      .insert(purchases)
+      .values({
+        ...purchase,
+        status: "completed"
+      })
+      .returning();
+    return newPurchase;
+  }
+
+  // Review methods
+  async getReviewsByListingId(listingId: number): Promise<Review[]> {
+    return db
+      .select()
+      .from(reviews)
+      .where(eq(reviews.listingId, listingId))
+      .orderBy(desc(reviews.createdAt));
+  }
+
+  async createReview(review: InsertReview): Promise<Review> {
+    const [newReview] = await db
+      .insert(reviews)
+      .values(review)
+      .returning();
+
+    // Update listing rating and review count
+    const listingReviews = await this.getReviewsByListingId(review.listingId);
+    const totalRating = listingReviews.reduce((sum, r) => sum + r.rating, 0);
+    const averageRating = totalRating / listingReviews.length;
+
+    await db
+      .update(listings)
+      .set({
+        reviewCount: listingReviews.length,
+        rating: averageRating
+      })
+      .where(eq(listings.id, review.listingId));
+
+    return newReview;
+  }
+
+  // Quote methods
+  async getQuotesByBuyerId(buyerId: number): Promise<Quote[]> {
+    return db
+      .select()
+      .from(quotes)
+      .where(eq(quotes.buyerId, buyerId))
+      .orderBy(desc(quotes.createdAt));
+  }
+
+  async getQuotesBySellerId(sellerId: number): Promise<Quote[]> {
+    return db
+      .select()
+      .from(quotes)
+      .where(eq(quotes.sellerId, sellerId))
+      .orderBy(desc(quotes.createdAt));
+  }
+
+  async createQuote(quote: InsertQuote): Promise<Quote> {
+    const [newQuote] = await db
+      .insert(quotes)
+      .values({
+        ...quote,
+        status: "pending"
+      })
+      .returning();
+    return newQuote;
+  }
+
+  // Dashboard methods
+  async getEarningsBySellerId(sellerId: number): Promise<{
+    totalEarnings: number;
+    recentEarnings: { date: string; amount: number }[];
+  }> {
+    // Get total earnings
+    const result = await db
+      .select({
+        total: sql<number>`sum(${purchases.amount})`
+      })
+      .from(purchases)
+      .where(
+        and(
+          eq(purchases.sellerId, sellerId),
+          eq(purchases.status, "completed")
+        )
+      );
+
+    const totalEarnings = result[0]?.total || 0;
+
+    // Get earnings for the last 30 days
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    const recentPurchasesResult = await db
+      .select({
+        date: sql<string>`date_trunc('day', ${purchases.createdAt})::text`,
+        amount: sql<number>`sum(${purchases.amount})`
+      })
+      .from(purchases)
+      .where(
+        and(
+          eq(purchases.sellerId, sellerId),
+          eq(purchases.status, "completed"),
+          gte(purchases.createdAt, thirtyDaysAgo)
+        )
+      )
+      .groupBy(sql`date_trunc('day', ${purchases.createdAt})`)
+      .orderBy(asc(sql`date_trunc('day', ${purchases.createdAt})`));
+
+    const recentEarnings = recentPurchasesResult.map(row => ({
+      date: row.date.split('T')[0],
+      amount: row.amount
+    }));
+
+    return {
+      totalEarnings,
+      recentEarnings
+    };
+  }
+
+  // Initialize demo data if needed
+  async initializeDemoData() {
+    // Check if we have categories
+    const categoriesCount = await db.select({ count: sql<number>`count(*)` }).from(categories);
+    
+    if (categoriesCount[0].count === 0) {
+      // Create categories
+      const demoCategories: InsertCategory[] = [
+        { name: "Dashboards", slug: "dashboards", description: "Analytics, admin panels, and data visualization", iconName: "LineChart", color: "#6366F1" },
+        { name: "E-commerce", slug: "ecommerce", description: "Online stores, product pages, and checkout flows", iconName: "ShoppingBag", color: "#10B981" },
+        { name: "Chat & Social", slug: "chat-social", description: "Messaging, forums, and social networks", iconName: "MessageCircle", color: "#F59E0B" },
+        { name: "UI Components", slug: "ui-components", description: "Reusable elements, form controls, and layouts", iconName: "Sliders", color: "#EF4444" },
+        { name: "Data Tables", slug: "data-tables", description: "Interactive tables with sorting and filtering", iconName: "Table", color: "#3B82F6" },
+        { name: "Landing Pages", slug: "landing-pages", description: "Marketing sites and conversion-focused pages", iconName: "Layout", color: "#8B5CF6" },
+        { name: "Email Templates", slug: "email-templates", description: "Responsive HTML emails for marketing and notifications", iconName: "Mail", color: "#EC4899" },
+        { name: "Portfolio", slug: "portfolio", description: "Developer portfolios and personal websites", iconName: "User", color: "#6B7280" }
+      ];
+      
+      await db.insert(categories).values(demoCategories);
+    }
+  }
+}
+
+// Use database storage
+export const storage = new DatabaseStorage();
+
+// Initialize demo data - make sure it's done after startup
+(async () => {
+  try {
+    await storage.initializeDemoData();
+    console.log("Demo data initialization completed");
+  } catch (error) {
+    console.error("Error initializing demo data:", error);
+  }
+})();
