@@ -52,11 +52,11 @@ export default function BrowsePage() {
         <meta name="description" content="Browse our collection of developer templates, components, and micro-apps." />
       </Helmet>
       
-      <div className="bg-white py-8">
+      <div className="py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">Browse Templates</h1>
-            <p className="mt-4 text-gray-500 max-w-2xl mx-auto">
+            <h1 className="text-3xl font-bold">Browse Templates</h1>
+            <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
               Explore our curated collection of high-quality templates, components, and micro-apps built by developers for developers.
             </p>
           </div>
@@ -66,7 +66,7 @@ export default function BrowsePage() {
             <form onSubmit={handleSearch} className="flex items-center">
               <div className="relative flex-grow">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Search className="h-5 w-5 text-gray-400" />
+                  <Search className="h-5 w-5 text-muted-foreground" />
                 </div>
                 <Input
                   type="text"
@@ -98,7 +98,7 @@ export default function BrowsePage() {
             <div className="col-span-12 lg:col-span-9">
               {searchTerm && (
                 <div className="mb-6">
-                  <h2 className="text-xl font-semibold text-gray-900">
+                  <h2 className="text-xl font-semibold">
                     {searchTerm ? `Search results for "${searchTerm}"` : "All Templates"}
                   </h2>
                 </div>

@@ -71,7 +71,7 @@ export default function ListingFilters({
             variant="ghost" 
             size="sm" 
             onClick={handleReset}
-            className="text-gray-500 hover:text-gray-700 flex items-center"
+            className="flex items-center"
           >
             <RefreshCw className="h-4 w-4 mr-1" />
             Reset
@@ -110,7 +110,7 @@ export default function ListingFilters({
             onValueChange={setPriceRange}
             className="my-6"
           />
-          <div className="flex justify-between text-sm text-gray-500">
+          <div className="flex justify-between text-sm text-muted-foreground">
             <span>${(priceRange[0] / 100).toFixed(2)}</span>
             <span>${(priceRange[1] / 100).toFixed(2)}</span>
           </div>
@@ -140,7 +140,7 @@ export default function ListingFilters({
                       {Array(5 - rating)
                         .fill(0)
                         .map((_, i) => (
-                          <Star key={i} className="h-4 w-4 text-gray-300" />
+                          <Star key={i} className="h-4 w-4 text-muted" />
                         ))}
                       <span className="ml-1 text-sm">& up</span>
                     </div>
