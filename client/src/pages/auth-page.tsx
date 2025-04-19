@@ -117,13 +117,13 @@ export default function AuthPage() {
       </Helmet>
       <div className="flex min-h-screen">
         {/* Left side - Form */}
-        <div className="flex flex-col justify-center w-full px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24 lg:w-1/2">
-          <div className="w-full max-w-sm mx-auto lg:w-96">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-extrabold text-gray-900">
+        <div className="flex flex-col justify-center w-full lg:w-1/2 p-4">
+          <div className="w-full max-w-sm mx-auto">
+            <div className="text-center space-y-2">
+              <h2 className="text-2xl font-bold">
                 Welcome to CodeCraft
               </h2>
-              <p className="mt-2 text-sm text-gray-600">
+              <p className="text-muted-foreground text-sm">
                 {activeTab === "login"
                   ? "Sign in to access your account"
                   : "Create a new account to get started"}
@@ -134,7 +134,7 @@ export default function AuthPage() {
               defaultValue="login"
               value={activeTab}
               onValueChange={setActiveTab}
-              className="w-full"
+              className="w-full mt-6"
             >
               <TabsList className="grid w-full grid-cols-2 mb-6">
                 <TabsTrigger value="login">Login</TabsTrigger>
@@ -192,10 +192,10 @@ export default function AuthPage() {
                     </Form>
                   </CardContent>
                   <CardFooter className="flex justify-center">
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-muted-foreground">
                       Don't have an account?{" "}
                       <button
-                        className="text-primary font-medium"
+                        className="text-primary"
                         onClick={() => setActiveTab("register")}
                       >
                         Sign up
@@ -282,10 +282,10 @@ export default function AuthPage() {
                     </Form>
                   </CardContent>
                   <CardFooter className="flex justify-center">
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-muted-foreground">
                       Already have an account?{" "}
                       <button
-                        className="text-primary font-medium"
+                        className="text-primary"
                         onClick={() => setActiveTab("login")}
                       >
                         Sign in
@@ -300,43 +300,43 @@ export default function AuthPage() {
 
         {/* Right side - Hero */}
         <div className="hidden lg:block relative w-0 flex-1">
-          <div className="absolute inset-0 bg-gradient-to-r from-primary to-primary-800 flex flex-col justify-center p-12">
+          <div className="absolute inset-0 bg-primary flex flex-col justify-center p-12">
             <div className="max-w-lg mx-auto">
-              <h2 className="text-4xl font-bold text-white mb-6">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-primary-foreground mb-6">
                 Supercharge Your Development Process
               </h2>
-              <ul className="space-y-4 text-white">
+              <ul className="space-y-4 text-primary-foreground/90">
                 <li className="flex items-start">
-                  <svg className="h-6 w-6 text-primary-300 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="h-6 w-6 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                   <span>Access high-quality code templates built by expert developers</span>
                 </li>
                 <li className="flex items-start">
-                  <svg className="h-6 w-6 text-primary-300 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="h-6 w-6 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                   <span>Save weeks of development time on your projects</span>
                 </li>
                 <li className="flex items-start">
-                  <svg className="h-6 w-6 text-primary-300 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="h-6 w-6 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                   <span>Sell your own templates and earn passive income</span>
                 </li>
                 <li className="flex items-start">
-                  <svg className="h-6 w-6 text-primary-300 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="h-6 w-6 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                   <span>Request custom work for your specific requirements</span>
                 </li>
               </ul>
 
-              <div className="mt-12 p-6 bg-white/10 rounded-lg backdrop-blur-sm">
-                <blockquote className="text-white">
+              <div className="mt-12 p-6 bg-primary-foreground/10 rounded-lg backdrop-blur-sm">
+                <blockquote className="text-primary-foreground/95">
                   "I was able to launch my MVP in just 3 days thanks to CodeCraft templates. What would have taken weeks was completed in a weekend!"
                 </blockquote>
-                <p className="mt-4 font-medium text-primary-200">— Alex Thompson, Startup Founder</p>
+                <p className="mt-4 font-medium text-primary-foreground/80">— Alex Thompson, Startup Founder</p>
               </div>
             </div>
           </div>
