@@ -1,0 +1,165 @@
+Product Requirements Document (PRD)
+
+1. Overview A curated marketplace where hobbyist developers (Replit, lovable.dev, Bolt.new, v0) can list, discover, and purchase lightweight templates, micro‑apps, and custom gigs. Buyers gain instant access to downloadable code or commission bespoke work; sellers monetize their projects with minimal friction.
+
+2. Objectives & Success Metrics
+
+Objective: Launch an MVP enabling listing, preview, purchase, and commission workflows.
+
+Metrics:
+
+Listings created: ≥20 within first month
+
+Buyer conversion rate: ≥10% of unique visitors
+
+Average transaction value: ≥$30
+
+Repeat purchase rate: ≥15% by month 3
+
+3. User Personas
+
+Hobbyist Hannah: New to coding; wants ready‑made templates.
+
+Power‑User Patrick: Builds polished micro‑apps; seeks side income.
+
+Startup Sophia: Requires proofs‑of‑concept quickly; may both buy and commission.
+
+4. User Stories
+
+As a buyer, I want to browse by category and preview screenshots so I can find a template quickly.
+
+As a buyer, I want one‑click checkout with instant download so I can start coding immediately.
+
+As a buyer, I want to request a quote for custom features to get a tailored solution.
+
+As a seller, I want to upload metadata, screenshots, and demo link so I can showcase my project.
+
+As a seller, I want to receive payments instantly or via escrow for custom work.
+
+5. MVP Feature List
+
+5.1. Marketplace Discovery
+
+Landing page with search, featured carousel, categories grid.
+
+Collections page ("Spaces") with filters & sorting.
+
+Browse view: card grid with screenshots, tags, author rating.
+
+5.2. Listing & Preview
+
+Create/Edit listing: title, description, tech tags, demo URL, screenshot uploads.
+
+Project detail page: gallery, live demo link, description, tabs (Overview, Tutorials, Related).
+
+5.3. Transactions
+
+Digital Goods: Stripe Checkout for fixed‑price templates → instant delivery.
+
+Custom Work: Quote request form → escrow via serverless function → milestone management.
+
+5.4. User Accounts & Dashboards
+
+OAuth login (GitHub/Replit).
+
+Buyer Dashboard: purchases & active quotes.
+
+Seller Dashboard: my listings, earnings, payout settings, quote requests.
+
+5.5. Quality Control & Curation
+
+Automated checks: URL reachability, screenshot validation.
+
+Community review badge: earned after ≥5 positive ratings.
+
+“Verified” badge for code/demo reviewed by power‑user mentors.
+
+5.6. Utility Pages
+
+About / How It Works
+
+FAQ / Help
+
+Terms of Service, Privacy Policy, Contact
+
+6. Non‑Functional Requirements
+
+Performance: Listing pages load under 2s, embed demos under 1s.
+
+Security: Stripe PCI compliance, sanitized user inputs, OAuth flows.
+
+Scalability: Serverless backend with auto‑scaling; Replit DB for listings.
+
+Maintainability: Modular codebase (Next.js or SvelteKit); CI/CD via GitHub Actions.
+
+7. User Flows & Wireframes
+
+Refer to sitemap:• Home → Collections → Browse → Detail → Checkout/Quote• Dashboard (Buyer/Seller)• Listing CRUD
+
+8. Technical Stack
+
+Frontend: Next.js (hosted on Replit)
+
+Backend: Serverless functions (Replit or Firebase), Replit DB
+
+Authentication: GitHub/Replit OAuth
+
+Payments: Stripe Checkout & Connect
+
+Storage: S3‑compatible (screenshots), signed URLs
+
+9. Roadmap & Milestones
+
+Phase
+
+Deliverables
+
+Timeline
+
+Phase 0: Planning
+
+Finalize PRD, wireframes, tech spike
+
+Week 1
+
+Phase 1: Core MVP
+
+Listing CRUD, browse & detail views, Stripe checkout
+
+Weeks 2–4
+
+Phase 2: User Accounts
+
+OAuth, Buyer/Seller dashboards, screenshot uploads
+
+Weeks 5–6
+
+Phase 3: Custom Jobs
+
+Quote form, escrow logic, milestone management
+
+Weeks 7–8
+
+Phase 4: Curation & QA
+
+Automated checks, review badge, manual curation dashboard
+
+Weeks 9–10
+
+Phase 5: Beta Launch
+
+Invite pilot sellers & buyers; collect feedback
+
+Week 11
+
+Phase 6: Public Launch
+
+Marketing site, help docs, scaling & optimizations
+
+Week 12+
+
+10. Success Metrics & Tracking
+
+Track via Google Analytics & Stripe dashboard.
+
+Weekly reports: listing count, transaction volume, conversion rates, user retention.
