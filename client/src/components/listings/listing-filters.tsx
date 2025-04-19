@@ -135,7 +135,7 @@ export default function ListingFilters({
                       {Array(rating)
                         .fill(0)
                         .map((_, i) => (
-                          <Star key={i} className="h-4 w-4 text-yellow-400 fill-yellow-400" />
+                          <Star key={i} className="h-4 w-4 text-primary fill-primary" />
                         ))}
                       {Array(5 - rating)
                         .fill(0)

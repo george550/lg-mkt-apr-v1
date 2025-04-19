@@ -149,7 +149,7 @@ export default function ListingDetail({ listing }: ListingDetailProps) {
                       key={i}
                       className={`w-4 h-4 ${
                         i < Math.floor(listing.rating)
-                          ? "text-yellow-400 fill-yellow-400"
+                          ? "text-primary fill-primary"
                           : "text-muted"
                       }`}
                     />

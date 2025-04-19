@@ -57,7 +57,7 @@ export default function HeroSection() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
-              <Button type="submit" className="px-6 py-3 rounded-r-md">
+              <Button type="submit">
                 Search
               </Button>
             </div>
