@@ -280,23 +280,69 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
     
     try {
-      // Simple test route for debugging purposes
-      console.log("STRIPE_SECRET_KEY exists:", !!process.env.STRIPE_SECRET_KEY);
-      console.log("Request body:", req.body);
+      const { listingId, amount } = req.body;
+      console.log("Payment intent request:", { listingId, amount, type: typeof amount });
       
-      // Hard-code a test payment intent to simplify debugging
       try {
-        const testIntent = await stripe.paymentIntents.create({
-          amount: 1000, // $10.00
-          currency: "usd",
-          metadata: {
-            test: "true",
-            buyerId: req.user.id.toString(),
-          },
-        });
+        let paymentIntent;
+        let amountInCents = 0;
         
-        console.log("Test payment intent created:", testIntent.id);
-        return res.json({ clientSecret: testIntent.client_secret });
+        // Handle direct amount payment (for testing)
+        if (amount !== undefined) {
+          // Parse amount correctly - ensure we have a valid number
+          if (typeof amount === 'string') {
+            amountInCents = Math.round(parseFloat(amount) * 100);
+          } else if (typeof amount === 'number') {
+            amountInCents = Math.round(amount * 100);
+          } else {
+            return res.status(400).json({ message: "Invalid amount value" });
+          }
+          
+          if (isNaN(amountInCents) || amountInCents <= 0) {
+            return res.status(400).json({ message: "Amount must be a positive number" });
+          }
+          
+          console.log("Amount in cents:", amountInCents);
+          
+          paymentIntent = await stripe.paymentIntents.create({
+            amount: amountInCents,
+            currency: "usd",
+            metadata: {
+              buyerId: req.user.id.toString(),
+            },
+          });
+        }
+        // Handle listing-based payment
+        else if (listingId) {
+          const listing = await storage.getListingById(parseInt(listingId));
+          
+          if (!listing) {
+            return res.status(404).json({ message: "Listing not found" });
+          }
+          
+          if (!listing.price || isNaN(listing.price) || listing.price <= 0) {
+            return res.status(400).json({ message: "Invalid listing price" });
+          }
+          
+          // For listings, the price is stored in cents already
+          amountInCents = listing.price;
+          console.log("Listing price in cents:", amountInCents);
+          
+          paymentIntent = await stripe.paymentIntents.create({
+            amount: amountInCents,
+            currency: "usd",
+            metadata: {
+              listingId: listing.id.toString(),
+              buyerId: req.user.id.toString(),
+              sellerId: listing.sellerId.toString(),
+            },
+          });
+        } else {
+          return res.status(400).json({ message: "Either amount or listingId is required" });
+        }
+        
+        console.log("Payment intent created:", paymentIntent.id);
+        return res.json({ clientSecret: paymentIntent.client_secret });
       } catch (stripeErr) {
         console.error("Stripe API error:", stripeErr);
         return res.status(500).json({ message: `Stripe API error: ${(stripeErr as Error).message}` });
