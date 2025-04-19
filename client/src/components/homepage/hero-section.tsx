@@ -51,7 +51,7 @@ export default function HeroSection() {
                 </div>
                 <Input
                   type="text"
-                  className="block w-full rounded-none rounded-l-md pl-10 py-3"
+                  className="pl-10"
                   placeholder="Search templates, apps, or code..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -67,7 +67,7 @@ export default function HeroSection() {
               <Badge
                 key={index}
                 variant="outline"
-                className="cursor-pointer px-3 py-1"
+                className="cursor-pointer"
                 onClick={() => handleTagClick(tag.name)}
               >
                 {tag.name}
