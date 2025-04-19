@@ -25,38 +25,40 @@ const testimonials = [
 
 export default function TestimonialSection() {
   return (
-    <section className="py-12 bg-background">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold">Trusted by Developers</h2>
-          <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
+    <section>
+      <div className="container py-8">
+        <div className="text-center space-y-4">
+          <h2 className="text-2xl font-bold">Trusted by Developers</h2>
+          <p className="text-muted-foreground">
             Join thousands of hobbyist developers who are saving time and making money with CodeCraft templates.
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
           {testimonials.map((testimonial, index) => (
             <Card key={index}>
               <CardContent>
-                <div className="flex items-center mb-4">
-                  <div className="flex text-primary">
+                <div className="space-y-4">
+                  <div className="flex">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-5 w-5 fill-current" />
+                      <Star key={i} />
                     ))}
                   </div>
-                </div>
-                <blockquote className="text-foreground mb-4">
-                  "{testimonial.quote}"
-                </blockquote>
-                <div className="flex items-center">
-                  <Avatar>
-                    <AvatarFallback>
-                      {testimonial.initials}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="ml-3">
-                    <p className="font-medium">{testimonial.author}</p>
-                    <p className="text-muted-foreground">{testimonial.role}</p>
+                  
+                  <blockquote>
+                    "{testimonial.quote}"
+                  </blockquote>
+                  
+                  <div className="flex items-center">
+                    <Avatar>
+                      <AvatarFallback>
+                        {testimonial.initials}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="ml-3">
+                      <p>{testimonial.author}</p>
+                      <p className="text-muted-foreground">{testimonial.role}</p>
+                    </div>
                   </div>
                 </div>
               </CardContent>

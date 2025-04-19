@@ -29,23 +29,22 @@ export default function HeroSection() {
   };
 
   return (
-    <section className="bg-background py-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-extrabold sm:text-5xl sm:tracking-tight lg:text-6xl">
+    <section>
+      <div className="container py-8">
+        <div className="text-center space-y-4">
+          <h1 className="text-3xl font-bold">
             <span className="block">Discover & Buy Developer</span>
             <span className="block text-primary">Templates & Micro-Apps</span>
           </h1>
-          <p className="mt-5 max-w-xl mx-auto text-xl text-muted-foreground">
+          <p className="text-muted-foreground">
             A curated marketplace for hobbyist developers to buy and sell code.
           </p>
         </div>
 
-        {/* Search Bar */}
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-lg mx-auto mt-8">
           <form onSubmit={handleSearch}>
             <div className="flex gap-2">
-              <div className="flex-grow relative">
+              <div className="relative flex-grow">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   type="text"
@@ -58,7 +57,8 @@ export default function HeroSection() {
               <Button type="submit">Search</Button>
             </div>
           </form>
-          <div className="flex flex-wrap gap-2 mt-3 justify-center">
+          
+          <div className="flex flex-wrap gap-2 mt-4 justify-center">
             {popularTags.map((tag, index) => (
               <Badge
                 key={index}

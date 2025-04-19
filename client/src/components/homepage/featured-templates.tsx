@@ -19,16 +19,16 @@ export default function FeaturedTemplates() {
 
   if (isLoading) {
     return (
-      <section className="py-12 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section>
+        <div className="container py-8">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold">Featured Templates</h2>
-            <Link href="/browse" className="text-primary hover:opacity-80 font-medium flex items-center">
+            <Link href="/browse" className="flex items-center">
               View all
               <ChevronRight className="ml-1 h-5 w-5" />
             </Link>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {[...Array(4)].map((_, i) => (
               <Card key={i}>
                 <Skeleton className="h-48 w-full" />
@@ -56,8 +56,8 @@ export default function FeaturedTemplates() {
 
   if (error) {
     return (
-      <section className="py-12 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section>
+        <div className="container py-8">
           <div className="text-center">
             <p className="text-destructive">Failed to load featured templates</p>
           </div>
@@ -67,17 +67,17 @@ export default function FeaturedTemplates() {
   }
 
   return (
-    <section className="py-12 bg-background">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section>
+      <div className="container py-8">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold">Featured Templates</h2>
-          <Link href="/browse" className="text-primary hover:opacity-80 font-medium flex items-center">
+          <Link href="/browse" className="flex items-center">
             View all
             <ChevronRight className="ml-1 h-5 w-5" />
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {featuredListings && featuredListings.length > 0 ? (
             featuredListings.map((listing) => (
               <Link key={listing.id} href={`/listing/${listing.id}`}>

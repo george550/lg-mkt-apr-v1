@@ -38,10 +38,10 @@ export default function CategoriesGrid() {
 
   if (isLoading) {
     return (
-      <section className="py-12 bg-muted/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Skeleton className="h-8 w-64 mb-8" />
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <section>
+        <div className="container py-8">
+          <Skeleton className="h-8 w-64 mb-6" />
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {[...Array(8)].map((_, i) => (
               <Card key={i} className="overflow-hidden">
                 <CardContent className="p-6">
@@ -62,8 +62,8 @@ export default function CategoriesGrid() {
 
   if (error) {
     return (
-      <section className="py-12 bg-muted/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section>
+        <div className="container py-8">
           <div className="text-center">
             <p className="text-destructive">Failed to load categories</p>
           </div>
@@ -73,10 +73,10 @@ export default function CategoriesGrid() {
   }
 
   return (
-    <section className="py-12 bg-muted/50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-2xl font-bold mb-8">Browse by Category</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <section>
+      <div className="container py-8">
+        <h2 className="text-2xl font-bold mb-6">Browse by Category</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {categories && categories.map((category) => (
             <Link key={category.id} href={`/browse?category=${category.id}`}>
               <Card className="h-full">
