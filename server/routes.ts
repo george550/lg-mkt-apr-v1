@@ -280,25 +280,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
     
     try {
-      const { listingId } = req.body;
-      const listing = await storage.getListingById(parseInt(listingId));
+      // Simple test route for debugging purposes
+      console.log("STRIPE_SECRET_KEY exists:", !!process.env.STRIPE_SECRET_KEY);
+      console.log("Request body:", req.body);
       
-      if (!listing) {
-        return res.status(404).json({ message: "Listing not found" });
+      // Hard-code a test payment intent to simplify debugging
+      try {
+        const testIntent = await stripe.paymentIntents.create({
+          amount: 1000, // $10.00
+          currency: "usd",
+          metadata: {
+            test: "true",
+            buyerId: req.user.id.toString(),
+          },
+        });
+        
+        console.log("Test payment intent created:", testIntent.id);
+        return res.json({ clientSecret: testIntent.client_secret });
+      } catch (stripeErr) {
+        console.error("Stripe API error:", stripeErr);
+        return res.status(500).json({ message: `Stripe API error: ${(stripeErr as Error).message}` });
       }
-      
-      const paymentIntent = await stripe.paymentIntents.create({
-        amount: listing.price,
-        currency: "usd",
-        metadata: {
-          listingId: listing.id.toString(),
-          buyerId: req.user.id.toString(),
-          sellerId: listing.sellerId.toString(),
-        },
-      });
-      
-      res.json({ clientSecret: paymentIntent.client_secret });
     } catch (error) {
+      console.error("Payment intent error:", error);
       if (error instanceof Error) {
         res.status(500).json({ message: `Error creating payment intent: ${error.message}` });
       } else {
