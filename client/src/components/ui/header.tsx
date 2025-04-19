@@ -71,34 +71,18 @@ export default function Header() {
             </div>
           </div>
           <div className="hidden sm:ml-6 sm:flex sm:items-center space-x-2">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon">
-                  {theme === "light" ? (
-                    <Sun className="h-[1.2rem] w-[1.2rem]" />
-                  ) : theme === "dark" ? (
-                    <Moon className="h-[1.2rem] w-[1.2rem]" />
-                  ) : (
-                    <Laptop className="h-[1.2rem] w-[1.2rem]" />
-                  )}
-                  <span className="sr-only">Toggle theme</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => setTheme("light")}>
-                  <Sun className="mr-2 h-4 w-4" />
-                  <span>Light</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme("dark")}>
-                  <Moon className="mr-2 h-4 w-4" />
-                  <span>Dark</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme("system")}>
-                  <Laptop className="mr-2 h-4 w-4" />
-                  <span>System</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <Button 
+              variant="outline" 
+              size="icon" 
+              onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+            >
+              {theme === "light" ? (
+                <Moon className="h-[1.2rem] w-[1.2rem]" />
+              ) : (
+                <Sun className="h-[1.2rem] w-[1.2rem]" />
+              )}
+              <span className="sr-only">Toggle theme</span>
+            </Button>
 
             {user ? (
               <>
@@ -189,29 +173,17 @@ export default function Header() {
           <div className="border-t border-border py-3 px-4">
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium">Theme</span>
-              <div className="flex space-x-2">
-                <Button 
-                  variant={theme === "light" ? "default" : "outline"} 
-                  size="icon" 
-                  onClick={() => setTheme("light")}
-                >
-                  <Sun className="h-4 w-4" />
-                </Button>
-                <Button 
-                  variant={theme === "dark" ? "default" : "outline"} 
-                  size="icon" 
-                  onClick={() => setTheme("dark")}
-                >
+              <Button 
+                variant="outline" 
+                size="icon" 
+                onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+              >
+                {theme === "light" ? (
                   <Moon className="h-4 w-4" />
-                </Button>
-                <Button 
-                  variant={theme === "system" ? "default" : "outline"} 
-                  size="icon" 
-                  onClick={() => setTheme("system")}
-                >
-                  <Laptop className="h-4 w-4" />
-                </Button>
-              </div>
+                ) : (
+                  <Sun className="h-4 w-4" />
+                )}
+              </Button>
             </div>
           </div>
           
