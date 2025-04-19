@@ -79,11 +79,9 @@ export default function CategoriesGrid() {
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {categories && categories.map((category) => (
             <Link key={category.id} href={`/browse?category=${category.id}`}>
-              <Card className="group flex flex-col justify-between overflow-hidden hover:shadow-md transition-shadow duration-200 cursor-pointer h-full">
+              <Card className="h-full">
                 <CardContent>
-                  <div 
-                    className="h-12 w-12 rounded-lg flex items-center justify-center mb-4 bg-primary/20 text-primary"
-                  >
+                  <div className="h-12 w-12 rounded-lg flex items-center justify-center mb-4 bg-muted">
                     {category.iconName && IconMap[category.iconName] ? (
                       IconMap[category.iconName]
                     ) : (
@@ -93,10 +91,8 @@ export default function CategoriesGrid() {
                   <h3 className="text-lg font-medium mb-1">{category.name}</h3>
                   <p className="text-sm text-muted-foreground">{category.description}</p>
                 </CardContent>
-                <CardFooter 
-                  className="bg-muted/50 group-hover:bg-opacity-70 transition-colors duration-200 text-primary"
-                >
-                  <span className="text-sm font-medium flex items-center">
+                <CardFooter>
+                  <span className="text-sm flex items-center">
                     {category.listingCount || 0} templates
                     <ChevronRight className="ml-1 h-4 w-4" />
                   </span>
