@@ -1,4 +1,5 @@
 import { Switch, Route } from "wouter";
+import { ThemeProvider } from "next-themes";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import HomePage from "@/pages/home-page";
 import AuthPage from "@/pages/auth-page";
@@ -37,9 +38,11 @@ function Router() {
 
 function App() {
   return (
-    <TooltipProvider>
-      <Router />
-    </TooltipProvider>
+    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+      <TooltipProvider>
+        <Router />
+      </TooltipProvider>
+    </ThemeProvider>
   );
 }
 

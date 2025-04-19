@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
+import { useTheme } from "next-themes";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,11 +11,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Menu, X, User, LogOut, Settings, ShoppingCart, Code } from "lucide-react";
+import { Menu, X, User, LogOut, Settings, ShoppingCart, Code, Sun, Moon, Laptop } from "lucide-react";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [location] = useLocation();
+  const { theme, setTheme } = useTheme();
   
   // Use try-catch for auth context since it might not be available immediately
   let user = null;
@@ -37,7 +39,7 @@ export default function Header() {
   };
 
   return (
-    <nav className="bg-white shadow-sm sticky top-0 z-50">
+    <nav className="bg-background border-b border-border sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
@@ -45,38 +47,69 @@ export default function Header() {
               <svg className="h-8 w-8 text-primary" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
               </svg>
-              <span className="ml-2 text-xl font-bold text-gray-900">CodeCraft</span>
+              <span className="ml-2 text-xl font-bold">CodeCraft</span>
             </Link>
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
               <Link 
                 href="/" 
-                className={`${isActivePath('/') ? 'border-primary text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
+                className={`${isActivePath('/') ? 'border-primary text-foreground' : 'border-transparent text-muted-foreground hover:border-border hover:text-foreground'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
               >
                 Home
               </Link>
               <Link 
                 href="/browse" 
-                className={`${isActivePath('/browse') ? 'border-primary text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
+                className={`${isActivePath('/browse') ? 'border-primary text-foreground' : 'border-transparent text-muted-foreground hover:border-border hover:text-foreground'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
               >
                 Browse
               </Link>
               <Link 
                 href="/browse?type=collections" 
-                className={`${isActivePath('/browse?type=collections') ? 'border-primary text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
+                className={`${isActivePath('/browse?type=collections') ? 'border-primary text-foreground' : 'border-transparent text-muted-foreground hover:border-border hover:text-foreground'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
               >
                 Collections
               </Link>
             </div>
           </div>
-          <div className="hidden sm:ml-6 sm:flex sm:items-center">
+          <div className="hidden sm:ml-6 sm:flex sm:items-center space-x-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="icon">
+                  {theme === "light" ? (
+                    <Sun className="h-[1.2rem] w-[1.2rem]" />
+                  ) : theme === "dark" ? (
+                    <Moon className="h-[1.2rem] w-[1.2rem]" />
+                  ) : (
+                    <Laptop className="h-[1.2rem] w-[1.2rem]" />
+                  )}
+                  <span className="sr-only">Toggle theme</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => setTheme("light")}>
+                  <Sun className="mr-2 h-4 w-4" />
+                  <span>Light</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme("dark")}>
+                  <Moon className="mr-2 h-4 w-4" />
+                  <span>Dark</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme("system")}>
+                  <Laptop className="mr-2 h-4 w-4" />
+                  <span>System</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             {user ? (
               <>
                 <Link href="/create-listing">
-                  <Button className="mr-3">Sell Your Code</Button>
+                  <Button>Sell Your Code</Button>
                 </Link>
                 <DropdownMenu>
-                  <DropdownMenuTrigger className="p-1 rounded-full text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
-                    <User className="h-6 w-6" />
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="rounded-full">
+                      <User className="h-5 w-5" />
+                    </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuLabel>My Account</DropdownMenuLabel>
@@ -113,82 +146,112 @@ export default function Header() {
             )}
           </div>
           <div className="-mr-2 flex items-center sm:hidden">
-            <button
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              type="button"
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"
-              aria-expanded="false"
+              className="inline-flex items-center justify-center rounded-md focus:outline-none"
             >
               <span className="sr-only">Open main menu</span>
               {isMenuOpen ? <X className="block h-6 w-6" /> : <Menu className="block h-6 w-6" />}
-            </button>
+            </Button>
           </div>
         </div>
       </div>
 
       {/* Mobile menu */}
       {isMenuOpen && (
-        <div className="sm:hidden">
+        <div className="sm:hidden border-t border-border">
           <div className="pt-2 pb-3 space-y-1">
             <Link 
               href="/" 
-              className={`${isActivePath('/') ? 'bg-primary-50 border-primary text-primary' : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
+              className={`${isActivePath('/') ? 'bg-accent border-primary text-accent-foreground' : 'border-transparent text-muted-foreground hover:bg-accent/50 hover:border-border hover:text-foreground'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
               onClick={() => setIsMenuOpen(false)}
             >
               Home
             </Link>
             <Link 
               href="/browse" 
-              className={`${isActivePath('/browse') ? 'bg-primary-50 border-primary text-primary' : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
+              className={`${isActivePath('/browse') ? 'bg-accent border-primary text-accent-foreground' : 'border-transparent text-muted-foreground hover:bg-accent/50 hover:border-border hover:text-foreground'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
               onClick={() => setIsMenuOpen(false)}
             >
               Browse
             </Link>
             <Link 
               href="/browse?type=collections" 
-              className={`${isActivePath('/browse?type=collections') ? 'bg-primary-50 border-primary text-primary' : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
+              className={`${isActivePath('/browse?type=collections') ? 'bg-accent border-primary text-accent-foreground' : 'border-transparent text-muted-foreground hover:bg-accent/50 hover:border-border hover:text-foreground'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
               onClick={() => setIsMenuOpen(false)}
             >
               Collections
             </Link>
           </div>
-          <div className="pt-4 pb-3 border-t border-gray-200">
+          
+          <div className="border-t border-border py-3 px-4">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium">Theme</span>
+              <div className="flex space-x-2">
+                <Button 
+                  variant={theme === "light" ? "default" : "outline"} 
+                  size="icon" 
+                  onClick={() => setTheme("light")}
+                >
+                  <Sun className="h-4 w-4" />
+                </Button>
+                <Button 
+                  variant={theme === "dark" ? "default" : "outline"} 
+                  size="icon" 
+                  onClick={() => setTheme("dark")}
+                >
+                  <Moon className="h-4 w-4" />
+                </Button>
+                <Button 
+                  variant={theme === "system" ? "default" : "outline"} 
+                  size="icon" 
+                  onClick={() => setTheme("system")}
+                >
+                  <Laptop className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </div>
+          
+          <div className="pt-4 pb-3 border-t border-border">
             {user ? (
               <div>
                 <div className="flex items-center px-4">
                   <div className="flex-shrink-0">
-                    <User className="h-10 w-10 rounded-full bg-gray-200 p-2" />
+                    <User className="h-10 w-10 rounded-full bg-muted p-2" />
                   </div>
                   <div className="ml-3">
-                    <div className="text-base font-medium text-gray-800">{user.username}</div>
-                    <div className="text-sm font-medium text-gray-500">{user.email}</div>
+                    <div className="text-base font-medium">{user.username}</div>
+                    <div className="text-sm font-medium text-muted-foreground">{user.email}</div>
                   </div>
                 </div>
                 <div className="mt-3 space-y-1">
                   <Link 
                     href="/dashboard" 
-                    className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
+                    className="block px-4 py-2 text-base font-medium text-muted-foreground hover:text-foreground hover:bg-accent/50"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Dashboard
                   </Link>
                   <Link 
                     href="/dashboard/buyer" 
-                    className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
+                    className="block px-4 py-2 text-base font-medium text-muted-foreground hover:text-foreground hover:bg-accent/50"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     My Purchases
                   </Link>
                   <Link 
                     href="/dashboard/seller" 
-                    className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
+                    className="block px-4 py-2 text-base font-medium text-muted-foreground hover:text-foreground hover:bg-accent/50"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     My Listings
                   </Link>
                   <Link 
                     href="/create-listing" 
-                    className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
+                    className="block px-4 py-2 text-base font-medium text-muted-foreground hover:text-foreground hover:bg-accent/50"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Sell Your Code
@@ -198,7 +261,7 @@ export default function Header() {
                       handleLogout();
                       setIsMenuOpen(false);
                     }}
-                    className="block w-full text-left px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
+                    className="block w-full text-left px-4 py-2 text-base font-medium text-muted-foreground hover:text-foreground hover:bg-accent/50"
                   >
                     Logout
                   </button>
@@ -208,7 +271,7 @@ export default function Header() {
               <div className="mt-3 space-y-1">
                 <Link 
                   href="/auth" 
-                  className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
+                  className="block px-4 py-2 text-base font-medium text-muted-foreground hover:text-foreground hover:bg-accent/50"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Sign In
