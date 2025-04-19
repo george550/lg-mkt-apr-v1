@@ -66,8 +66,8 @@ export default function ListingDetail({ listing }: ListingDetailProps) {
                 ))
               ) : (
                 <CarouselItem>
-                  <div className="p-1 h-[300px] sm:h-[400px] flex items-center justify-center bg-gray-100 rounded-lg">
-                    <span className="text-gray-400">No screenshots available</span>
+                  <div className="p-1 h-[300px] sm:h-[400px] flex items-center justify-center bg-muted rounded-lg">
+                    <span className="text-muted-foreground">No screenshots available</span>
                   </div>
                 </CarouselItem>
               )}
@@ -118,12 +118,13 @@ export default function ListingDetail({ listing }: ListingDetailProps) {
       {/* Right column - Listing details */}
       <div>
         <div className="sticky top-24">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">{listing.title}</h1>
+          <h1 className="text-3xl font-bold mb-2">{listing.title}</h1>
           
           <div className="flex items-center gap-4 mb-4">
             {category ? (
               <Badge
-                style={{ backgroundColor: `${category.color}20`, color: category.color }}
+                style={{ backgroundColor: category.color ? `${category.color}20` : 'var(--primary)',
+                        color: category.color || 'var(--primary)' }}
               >
                 {category.name}
               </Badge>
@@ -132,7 +133,7 @@ export default function ListingDetail({ listing }: ListingDetailProps) {
             )}
             
             {listing.isVerified && (
-              <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 flex items-center gap-1">
+              <Badge variant="outline" className="flex items-center gap-1 bg-primary/10 text-primary">
                 <CheckCircle className="w-3 h-3" />
                 Verified
               </Badge>
@@ -149,28 +150,28 @@ export default function ListingDetail({ listing }: ListingDetailProps) {
                       className={`w-4 h-4 ${
                         i < Math.floor(listing.rating)
                           ? "text-yellow-400 fill-yellow-400"
-                          : "text-gray-300"
+                          : "text-muted"
                       }`}
                     />
                   ))}
                 </div>
-                <span className="ml-2 text-sm text-gray-600">
+                <span className="ml-2 text-sm text-muted-foreground">
                   {listing.rating.toFixed(1)} ({listing.reviewCount} reviews)
                 </span>
               </div>
             ) : (
-              <span className="text-sm text-gray-500">No ratings yet</span>
+              <span className="text-sm text-muted-foreground">No ratings yet</span>
             )}
           </div>
 
-          <div className="text-3xl font-bold text-gray-900 mb-6">
+          <div className="text-3xl font-bold mb-6">
             ${(listing.price / 100).toFixed(2)}
           </div>
 
           {/* Tags */}
           {listing.tags && listing.tags.length > 0 && (
             <div className="mb-6">
-              <h3 className="text-sm font-medium text-gray-700 mb-2">Technologies</h3>
+              <h3 className="text-sm font-medium mb-2">Technologies</h3>
               <div className="flex flex-wrap gap-2">
                 {listing.tags.map((tag, index) => (
                   <Badge key={index} variant="secondary">
@@ -184,16 +185,16 @@ export default function ListingDetail({ listing }: ListingDetailProps) {
           {/* Seller info */}
           <Card className="mb-6">
             <CardContent className="p-4">
-              <h3 className="text-sm font-medium text-gray-700 mb-2">About the Seller</h3>
+              <h3 className="text-sm font-medium mb-2">About the Seller</h3>
               <div className="flex items-center">
-                <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-700">
+                <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center">
                   <User className="h-6 w-6" />
                 </div>
                 <div className="ml-3">
-                  <p className="text-sm font-medium text-gray-900">
+                  <p className="text-sm font-medium">
                     {seller ? seller.username : "Loading..."}
                   </p>
-                  <div className="flex items-center text-xs text-gray-500">
+                  <div className="flex items-center text-xs text-muted-foreground">
                     <Calendar className="h-3 w-3 mr-1" />
                     <span>
                       {listing.createdAt
@@ -208,22 +209,22 @@ export default function ListingDetail({ listing }: ListingDetailProps) {
 
           {/* What's included */}
           <div className="mb-6">
-            <h3 className="text-sm font-medium text-gray-700 mb-2">What's Included</h3>
-            <ul className="text-sm text-gray-600 space-y-2">
+            <h3 className="text-sm font-medium mb-2">What's Included</h3>
+            <ul className="text-sm text-muted-foreground space-y-2">
               <li className="flex items-center">
-                <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                <CheckCircle className="h-4 w-4 text-primary mr-2" />
                 <span>Full source code</span>
               </li>
               <li className="flex items-center">
-                <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                <CheckCircle className="h-4 w-4 text-primary mr-2" />
                 <span>Documentation</span>
               </li>
               <li className="flex items-center">
-                <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                <CheckCircle className="h-4 w-4 text-primary mr-2" />
                 <span>6 months of updates</span>
               </li>
               <li className="flex items-center">
-                <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                <CheckCircle className="h-4 w-4 text-primary mr-2" />
                 <span>Support via email</span>
               </li>
             </ul>

@@ -82,14 +82,14 @@ export default function ListingFilters({
         <div className="mb-6">
           <Label className="block mb-2">Category</Label>
           <Select
-            value={categoryId?.toString() || ""}
-            onValueChange={(value) => setCategoryId(value ? parseInt(value) : undefined)}
+            value={categoryId?.toString() || "all-categories"}
+            onValueChange={(value) => setCategoryId(value !== "all-categories" ? parseInt(value) : undefined)}
           >
             <SelectTrigger>
               <SelectValue placeholder="All Categories" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Categories</SelectItem>
+              <SelectItem value="all-categories">All Categories</SelectItem>
               {!isLoading && categories && categories.map((category) => (
                 <SelectItem key={category.id} value={category.id.toString()}>
                   {category.name}
