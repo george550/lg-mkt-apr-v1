@@ -43,23 +43,19 @@ export default function HeroSection() {
 
         {/* Search Bar */}
         <div className="max-w-3xl mx-auto">
-          <form onSubmit={handleSearch} className="relative">
-            <div className="flex rounded-md shadow-sm p-1">
-              <div className="relative flex items-stretch flex-grow focus-within:z-10">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Search className="h-5 w-5 text-muted-foreground" />
-                </div>
+          <form onSubmit={handleSearch}>
+            <div className="flex gap-2">
+              <div className="flex-grow relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   type="text"
-                  className="pl-10"
                   placeholder="Search templates, apps, or code..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10"
                 />
               </div>
-              <Button type="submit">
-                Search
-              </Button>
+              <Button type="submit">Search</Button>
             </div>
           </form>
           <div className="flex flex-wrap gap-2 mt-3 justify-center">
@@ -67,7 +63,6 @@ export default function HeroSection() {
               <Badge
                 key={index}
                 variant="outline"
-                className="cursor-pointer"
                 onClick={() => handleTagClick(tag.name)}
               >
                 {tag.name}
