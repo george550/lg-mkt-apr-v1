@@ -1,4 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Star } from "lucide-react";
 
 const testimonials = [
@@ -35,10 +36,10 @@ export default function TestimonialSection() {
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
-            <Card key={index} className="bg-secondary/50">
-              <CardContent className="p-6">
+            <Card key={index}>
+              <CardContent>
                 <div className="flex items-center mb-4">
-                  <div className="flex text-yellow-400">
+                  <div className="flex text-primary">
                     {[...Array(5)].map((_, i) => (
                       <Star key={i} className="h-5 w-5 fill-current" />
                     ))}
@@ -48,12 +49,14 @@ export default function TestimonialSection() {
                   "{testimonial.quote}"
                 </blockquote>
                 <div className="flex items-center">
-                  <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground font-medium">
-                    {testimonial.initials}
-                  </div>
+                  <Avatar>
+                    <AvatarFallback>
+                      {testimonial.initials}
+                    </AvatarFallback>
+                  </Avatar>
                   <div className="ml-3">
-                    <p className="text-sm font-medium">{testimonial.author}</p>
-                    <p className="text-xs text-muted-foreground">{testimonial.role}</p>
+                    <p className="font-medium">{testimonial.author}</p>
+                    <p className="text-muted-foreground">{testimonial.role}</p>
                   </div>
                 </div>
               </CardContent>

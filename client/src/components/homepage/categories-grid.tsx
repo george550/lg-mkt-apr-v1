@@ -80,13 +80,9 @@ export default function CategoriesGrid() {
           {categories && categories.map((category) => (
             <Link key={category.id} href={`/browse?category=${category.id}`}>
               <Card className="group flex flex-col justify-between overflow-hidden hover:shadow-md transition-shadow duration-200 cursor-pointer h-full">
-                <CardContent className="p-6">
+                <CardContent>
                   <div 
-                    className={`h-12 w-12 rounded-lg flex items-center justify-center mb-4`}
-                    style={{ 
-                      backgroundColor: category.color ? `${category.color}20` : 'var(--primary)',
-                      color: category.color || 'var(--primary)'
-                    }}
+                    className="h-12 w-12 rounded-lg flex items-center justify-center mb-4 bg-primary/20 text-primary"
                   >
                     {category.iconName && IconMap[category.iconName] ? (
                       IconMap[category.iconName]
@@ -98,8 +94,7 @@ export default function CategoriesGrid() {
                   <p className="text-sm text-muted-foreground">{category.description}</p>
                 </CardContent>
                 <CardFooter 
-                  className="px-6 py-2 bg-muted/50 group-hover:bg-opacity-70 transition-colors duration-200"
-                  style={{ color: category.color || 'var(--primary)' }}
+                  className="bg-muted/50 group-hover:bg-opacity-70 transition-colors duration-200 text-primary"
                 >
                   <span className="text-sm font-medium flex items-center">
                     {category.listingCount || 0} templates
