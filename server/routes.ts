@@ -76,14 +76,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.post("/api/listings", async (req: Request, res: Response) => {
-    if (!req.isAuthenticated()) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
     try {
+      // If authenticated, use the user's ID, otherwise use sellerId from the request (for demo data)
+      let sellerId = req.isAuthenticated() ? req.user.id : req.body.sellerId || 1;
+      
       const validatedData = insertListingSchema.parse({
         ...req.body,
-        sellerId: req.user.id,
+        sellerId,
       });
       
       const listing = await storage.createListing(validatedData);
