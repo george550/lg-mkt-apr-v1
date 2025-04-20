@@ -396,6 +396,84 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json({ received: true });
   });
 
+  // Claude AI API routes
+  app.post("/api/ai/enhance-description", async (req: Request, res: Response) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    
+    try {
+      const { title, description, tags } = req.body;
+      
+      if (!title || !description) {
+        return res.status(400).json({ message: "Title and description are required" });
+      }
+      
+      const enhancedDescription = await anthropicService.enhanceListingDescription(
+        title,
+        description,
+        tags || []
+      );
+      
+      res.json({ enhancedDescription });
+    } catch (error) {
+      console.error("Error enhancing description:", error);
+      if (error instanceof Error) {
+        res.status(500).json({ message: `Error enhancing description: ${error.message}` });
+      } else {
+        res.status(500).json({ message: "Error enhancing description" });
+      }
+    }
+  });
+  
+  app.post("/api/ai/sentiment", async (req: Request, res: Response) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    
+    try {
+      const { text } = req.body;
+      
+      if (!text) {
+        return res.status(400).json({ message: "Text is required" });
+      }
+      
+      const sentimentAnalysis = await anthropicService.analyzeSentiment(text);
+      res.json(sentimentAnalysis);
+    } catch (error) {
+      console.error("Error analyzing sentiment:", error);
+      if (error instanceof Error) {
+        res.status(500).json({ message: `Error analyzing sentiment: ${error.message}` });
+      } else {
+        res.status(500).json({ message: "Error analyzing sentiment" });
+      }
+    }
+  });
+  
+  app.post("/api/ai/summarize", async (req: Request, res: Response) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    
+    try {
+      const { text } = req.body;
+      
+      if (!text) {
+        return res.status(400).json({ message: "Text is required" });
+      }
+      
+      const summary = await anthropicService.summarizeText(text);
+      res.json({ summary });
+    } catch (error) {
+      console.error("Error summarizing text:", error);
+      if (error instanceof Error) {
+        res.status(500).json({ message: `Error summarizing text: ${error.message}` });
+      } else {
+        res.status(500).json({ message: "Error summarizing text" });
+      }
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
