@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useLocation } from "wouter";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -30,7 +30,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { X, Upload, Loader2, AlertTriangle } from "lucide-react";
+import { X, Upload, Loader2, AlertTriangle, Sparkles } from "lucide-react";
+import { EnhanceDescription } from "@/components/ai";
 import {
   Card,
   CardContent,
@@ -72,6 +73,7 @@ export default function CreateListing() {
   const [screenshots, setScreenshots] = useState<string[]>([]);
   const [screenshotUrls, setScreenshotUrls] = useState<string[]>([]);
   const [isDragging, setIsDragging] = useState(false);
+  const descriptionFieldRef = useRef<HTMLTextAreaElement>(null);
 
   const { data: categories, isLoading: categoriesLoading } = useQuery<Category[]>({
     queryKey: ["/api/categories"],
