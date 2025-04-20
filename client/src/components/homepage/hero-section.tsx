@@ -67,7 +67,7 @@ export default function HeroSection() {
                 key={index}
                 variant="outline"
                 onClick={() => handleTagClick(tag.name)}
-                className="rounded-md hover:bg-muted hover:border-gray-400 cursor-pointer transition-colors"
+                className="rounded-md hover:border-gray-400 cursor-pointer transition-colors"
               >
                 {tag.name}
               </Badge>
