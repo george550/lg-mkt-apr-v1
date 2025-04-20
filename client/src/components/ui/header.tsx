@@ -52,19 +52,19 @@ export default function Header() {
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
               <Link 
                 href="/" 
-                className={`${isActivePath('/') ? 'border-primary text-foreground' : 'border-transparent text-muted-foreground hover:border-border hover:text-foreground'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
+                className={`${isActivePath('/') ? 'border-primary text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
               >
                 Home
               </Link>
               <Link 
                 href="/browse" 
-                className={`${isActivePath('/browse') ? 'border-primary text-foreground' : 'border-transparent text-muted-foreground hover:border-border hover:text-foreground'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
+                className={`${isActivePath('/browse') ? 'border-primary text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
               >
                 Browse
               </Link>
               <Link 
                 href="/browse?type=collections" 
-                className={`${isActivePath('/browse?type=collections') ? 'border-primary text-foreground' : 'border-transparent text-muted-foreground hover:border-border hover:text-foreground'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
+                className={`${isActivePath('/browse?type=collections') ? 'border-primary text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
               >
                 Collections
               </Link>
@@ -149,21 +149,21 @@ export default function Header() {
           <div className="pt-2 pb-3 space-y-1">
             <Link 
               href="/" 
-              className={`${isActivePath('/') ? 'bg-accent border-primary text-accent-foreground' : 'border-transparent text-muted-foreground hover:bg-accent/50 hover:border-border hover:text-foreground'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
+              className={`${isActivePath('/') ? 'bg-accent border-primary text-accent-foreground' : 'border-transparent text-muted-foreground hover:bg-accent/50 hover:text-foreground'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
               onClick={() => setIsMenuOpen(false)}
             >
               Home
             </Link>
             <Link 
               href="/browse" 
-              className={`${isActivePath('/browse') ? 'bg-accent border-primary text-accent-foreground' : 'border-transparent text-muted-foreground hover:bg-accent/50 hover:border-border hover:text-foreground'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
+              className={`${isActivePath('/browse') ? 'bg-accent border-primary text-accent-foreground' : 'border-transparent text-muted-foreground hover:bg-accent/50 hover:text-foreground'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
               onClick={() => setIsMenuOpen(false)}
             >
               Browse
             </Link>
             <Link 
               href="/browse?type=collections" 
-              className={`${isActivePath('/browse?type=collections') ? 'bg-accent border-primary text-accent-foreground' : 'border-transparent text-muted-foreground hover:bg-accent/50 hover:border-border hover:text-foreground'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
+              className={`${isActivePath('/browse?type=collections') ? 'bg-accent border-primary text-accent-foreground' : 'border-transparent text-muted-foreground hover:bg-accent/50 hover:text-foreground'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
               onClick={() => setIsMenuOpen(false)}
             >
               Collections
