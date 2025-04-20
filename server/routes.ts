@@ -473,6 +473,84 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
     }
   });
+  
+  // Generate template listings with Claude
+  app.post("/api/admin/generate-templates", async (req: Request, res: Response) => {
+    try {
+      console.log('Generating project templates with Claude...');
+      
+      const prompt = `Generate 3 detailed project templates for a developer marketplace. For each template, provide:
+1. A title that clearly describes the template
+2. A detailed description (200-300 words) explaining its features and benefits
+3. The tech stack used (e.g., React, Node.js, MongoDB)
+4. 3-4 bullet points of key features as an array called "keyFeatures"
+5. 5-7 tags for categorization (e.g., authentication, dashboard, ecommerce)
+6. A realistic price between $29-$99
+7. A category ID from the following options: 1 (Web Apps), 2 (E-commerce), 3 (API Services), 4 (Mobile Apps), 5 (UI Components)
+8. A URL for a demo (use https://demo.company.com/project-name format)
+9. A realistic image URL that could be used for a screenshot (use https://images.unsplash.com/photo-ID format)
+
+Format your response as parseable JSON with an array of 3 template objects.`;
+
+      const message = await anthropicService.client.messages.create({
+        model: 'claude-3-7-sonnet-20250219',
+        system: "You are an expert in generating quality content for developer template marketplaces. Your responses should be technically accurate, creative, and presented in clean, parseable JSON format. Provide realistic examples that developers would find valuable.",
+        max_tokens: 1500,
+        messages: [{ role: 'user', content: prompt }],
+      });
+
+      const jsonString = message.content[0].text;
+      // Look for JSON array beginning with [
+      const jsonMatch = jsonString.match(/\[\s*\{.*\}\s*\]/s);
+      
+      if (!jsonMatch) {
+        throw new Error("Failed to extract valid JSON from Claude's response");
+      }
+      
+      const templates = JSON.parse(jsonMatch[0]);
+      
+      console.log('Generated templates:', templates);
+      
+      // Insert the templates into storage
+      const createdTemplates = [];
+      for (const template of templates) {
+        try {
+          const newListing = await storage.createListing({
+            title: template.title,
+            description: template.description,
+            sellerId: 1, // Assuming user 1 is the seller
+            price: typeof template.price === 'string' 
+              ? Math.round(parseFloat(template.price.replace('$', '')) * 100) 
+              : Math.round(template.price * 100), // Convert dollars to cents
+            categoryId: template.categoryId,
+            tags: template.tags,
+            demoUrl: template.demoUrl,
+            screenshots: [template.imageUrl],
+            techStack: Array.isArray(template.techStack) ? template.techStack : template.techStack.split(', '),
+            featuredPoints: template.keyFeatures
+          });
+          
+          console.log(`Created template: ${template.title} with ID ${newListing.id}`);
+          createdTemplates.push(newListing);
+        } catch (err) {
+          console.error(`Error creating template ${template.title}:`, err);
+        }
+      }
+      
+      res.status(200).json({ 
+        message: 'Successfully added templates to the database',
+        templates: createdTemplates
+      });
+      
+    } catch (error) {
+      console.error("Error generating templates:", error);
+      if (error instanceof Error) {
+        res.status(500).json({ message: `Error generating templates: ${error.message}` });
+      } else {
+        res.status(500).json({ message: "Error generating templates" });
+      }
+    }
+  });
 
   const httpServer = createServer(app);
   return httpServer;
