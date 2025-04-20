@@ -17,14 +17,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 // Map for icon names to components
 const IconMap: Record<string, React.ReactNode> = {
-  LineChart: <BarChart2 className="h-6 w-6" />,
-  ShoppingBag: <ShoppingBag className="h-6 w-6" />,
-  MessageCircle: <MessageCircle className="h-6 w-6" />,
-  Sliders: <Sliders className="h-6 w-6" />,
-  Table: <Table className="h-6 w-6" />,
-  Layout: <Layout className="h-6 w-6" />,
-  Mail: <Mail className="h-6 w-6" />,
-  User: <User className="h-6 w-6" />
+  LineChart: <BarChart2 className="h-5 w-5" />,
+  ShoppingBag: <ShoppingBag className="h-5 w-5" />,
+  MessageCircle: <MessageCircle className="h-5 w-5" />,
+  Sliders: <Sliders className="h-5 w-5" />,
+  Table: <Table className="h-5 w-5" />,
+  Layout: <Layout className="h-5 w-5" />,
+  Mail: <Mail className="h-5 w-5" />,
+  User: <User className="h-5 w-5" />
 };
 
 export default function CategoriesGrid() {
@@ -41,16 +41,17 @@ export default function CategoriesGrid() {
       <section>
         <div className="container py-8">
           <Skeleton className="h-8 w-64 mb-6" />
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4">
             {[...Array(8)].map((_, i) => (
               <Card key={i} className="overflow-hidden">
-                <CardContent className="pt-4 px-4">
-                  <Skeleton className="h-12 w-12 rounded-lg mb-4" />
-                  <Skeleton className="h-6 w-32 mb-1" />
-                  <Skeleton className="h-4 w-full" />
+                <CardContent className="pt-3 p-3">
+                  <Skeleton className="h-10 w-10 rounded-lg mb-3" />
+                  <Skeleton className="h-5 w-28 mb-1" />
+                  <Skeleton className="h-3 w-full mb-1" />
+                  <Skeleton className="h-3 w-3/4" />
                 </CardContent>
-                <CardFooter className="bg-muted/50 px-6 py-2">
-                  <Skeleton className="h-4 w-24" />
+                <CardFooter className="bg-muted/50 py-2 px-3">
+                  <Skeleton className="h-3 w-20" />
                 </CardFooter>
               </Card>
             ))}
@@ -76,25 +77,25 @@ export default function CategoriesGrid() {
     <section>
       <div className="container py-8">
         <h2 className="text-2xl font-bold mb-6">Browse by Category</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4">
           {categories && categories.map((category) => (
             <Link key={category.id} href={`/browse?category=${category.id}`}>
               <Card className="h-full">
-                <CardContent className="pt-4">
-                  <div className="h-12 w-12 rounded-lg flex items-center justify-center mb-4 bg-muted">
+                <CardContent className="pt-3 p-3">
+                  <div className="h-10 w-10 rounded-lg flex items-center justify-center mb-3 bg-muted">
                     {category.iconName && IconMap[category.iconName] ? (
                       IconMap[category.iconName]
                     ) : (
-                      <Layout className="h-6 w-6" />
+                      <Layout className="h-5 w-5" />
                     )}
                   </div>
-                  <h3 className="text-lg font-medium mb-1">{category.name}</h3>
-                  <p className="text-sm text-muted-foreground">{category.description}</p>
+                  <h3 className="text-base font-medium truncate">{category.name}</h3>
+                  <p className="text-xs text-muted-foreground line-clamp-2">{category.description}</p>
                 </CardContent>
-                <CardFooter>
-                  <span className="text-sm flex items-center">
+                <CardFooter className="py-2">
+                  <span className="text-xs flex items-center">
                     {category.listingCount || 0} templates
-                    <ChevronRight className="ml-1 h-4 w-4" />
+                    <ChevronRight className="ml-1 h-3 w-3" />
                   </span>
                 </CardFooter>
               </Card>
