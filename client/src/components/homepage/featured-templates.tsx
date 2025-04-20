@@ -95,7 +95,7 @@ export default function FeaturedTemplates() {
                       </div>
                     )}
                   </div>
-                  <CardContent>
+                  <CardContent className="pt-4">
                     <h3 className="text-lg font-medium">{listing.title}</h3>
                     <p className="text-muted-foreground text-sm line-clamp-2 mt-2">{listing.description}</p>
                     <div className="flex justify-between items-center mt-4">
