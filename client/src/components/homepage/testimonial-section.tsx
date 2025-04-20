@@ -37,7 +37,7 @@ export default function TestimonialSection() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
           {testimonials.map((testimonial, index) => (
             <Card key={index}>
-              <CardContent>
+              <CardContent className="pt-4">
                 <div className="space-y-4">
                   <div className="flex">
                     {[...Array(5)].map((_, i) => (

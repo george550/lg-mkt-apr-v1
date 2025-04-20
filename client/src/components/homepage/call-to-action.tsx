@@ -7,7 +7,7 @@ export default function CallToAction() {
     <section>
       <div className="container py-8">
         <Card>
-          <CardContent className="text-center">
+          <CardContent className="text-center pt-6">
             <div className="space-y-4">
               <h2 className="text-2xl font-bold">
                 Ready to build faster?

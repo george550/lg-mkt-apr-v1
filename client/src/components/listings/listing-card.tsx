@@ -33,7 +33,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
             <span className="font-medium">${(listing.price / 100).toFixed(2)}</span>
           </div>
         </div>
-        <CardContent className="p-4 flex-grow flex flex-col">
+        <CardContent className="p-4 pt-4 flex-grow flex flex-col">
           <h3 className="text-lg font-semibold mb-1">{listing.title}</h3>
           <p className="text-muted-foreground text-sm line-clamp-2 mb-3">{listing.description}</p>
           <div className="flex justify-between items-center mt-auto">
