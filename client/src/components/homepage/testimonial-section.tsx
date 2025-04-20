@@ -37,27 +37,27 @@ export default function TestimonialSection() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
           {testimonials.map((testimonial, index) => (
             <Card key={index}>
-              <CardContent className="pt-4">
-                <div className="space-y-4">
+              <CardContent className="pt-3 p-4">
+                <div className="space-y-3">
                   <div className="flex">
                     {[...Array(5)].map((_, i) => (
-                      <StarIcon key={i} className="text-yellow-500 h-4 w-4" />
+                      <StarIcon key={i} className="text-yellow-500 h-3 w-3" />
                     ))}
                   </div>
                   
-                  <blockquote>
+                  <blockquote className="text-sm">
                     "{testimonial.quote}"
                   </blockquote>
                   
                   <div className="flex items-center">
-                    <Avatar>
-                      <AvatarFallback>
+                    <Avatar className="h-7 w-7">
+                      <AvatarFallback className="text-xs">
                         {testimonial.initials}
                       </AvatarFallback>
                     </Avatar>
-                    <div className="ml-3">
-                      <p>{testimonial.author}</p>
-                      <p className="text-muted-foreground">{testimonial.role}</p>
+                    <div className="ml-2">
+                      <p className="text-sm">{testimonial.author}</p>
+                      <p className="text-muted-foreground text-xs">{testimonial.role}</p>
                     </div>
                   </div>
                 </div>

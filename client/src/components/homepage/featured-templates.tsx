@@ -78,12 +78,12 @@ export default function FeaturedTemplates() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div className="flex flex-wrap justify-start gap-4">
           {featuredListings && featuredListings.length > 0 ? (
             featuredListings.map((listing) => (
-              <Link key={listing.id} href={`/listing/${listing.id}`}>
+              <Link key={listing.id} href={`/listing/${listing.id}`} className="w-full sm:w-1/3 max-w-[300px]">
                 <Card className="h-full">
-                  <div className="h-48 bg-muted relative">
+                  <div className="h-40 bg-muted relative">
                     {listing.screenshots && listing.screenshots.length > 0 ? (
                       <img
                         src={listing.screenshots[0]}
@@ -92,30 +92,30 @@ export default function FeaturedTemplates() {
                       />
                     ) : (
                       <div className="flex items-center justify-center h-full">
-                        <span className="text-muted-foreground">No preview</span>
+                        <span className="text-muted-foreground text-xs">No preview</span>
                       </div>
                     )}
                   </div>
-                  <CardContent className="pt-4">
-                    <h3 className="text-lg font-medium">{listing.title}</h3>
-                    <p className="text-muted-foreground text-sm line-clamp-2 mt-2">{listing.description}</p>
-                    <div className="flex justify-between items-center mt-4">
+                  <CardContent className="pt-3 p-3">
+                    <h3 className="text-base font-medium truncate">{listing.title}</h3>
+                    <p className="text-muted-foreground text-xs line-clamp-2 mt-1">{listing.description}</p>
+                    <div className="flex justify-between items-center mt-2">
                       <div className="flex flex-wrap gap-1">
-                        {listing.tags && listing.tags.slice(0, 2).map((tag, index) => (
-                          <Badge key={index} variant="outline">
+                        {listing.tags && listing.tags.slice(0, 1).map((tag, index) => (
+                          <Badge key={index} variant="outline" className="text-xs py-0">
                             {tag}
                           </Badge>
                         ))}
                       </div>
                       {listing.rating && (
                         <div className="flex items-center">
-                          <StarIcon className="h-4 w-4 text-yellow-500" />
-                          <span className="text-muted-foreground ml-1">{listing.rating.toFixed(1)}</span>
+                          <StarIcon className="h-3 w-3 text-yellow-500" />
+                          <span className="text-muted-foreground ml-1 text-xs">{listing.rating.toFixed(1)}</span>
                         </div>
                       )}
                     </div>
-                    <div className="mt-4 text-right">
-                      <span>${(listing.price / 100).toFixed(2)}</span>
+                    <div className="mt-2 text-right">
+                      <span className="font-medium text-sm">${(listing.price / 100).toFixed(2)}</span>
                     </div>
                   </CardContent>
                 </Card>
