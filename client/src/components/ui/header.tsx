@@ -55,14 +55,14 @@ export default function Header() {
                 className="relative group inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium"
               >
                 <span className={`${isActivePath('/') ? 'text-foreground' : 'text-muted-foreground group-hover:text-foreground'}`}>Home</span>
-                <span className={`absolute left-[10%] bottom-[-2px] h-[2px] w-[80%] ${isActivePath('/') ? 'bg-primary' : 'bg-transparent group-hover:bg-primary'} transition-all duration-200 ease-out`}></span>
+                <span className={`absolute left-[10%] bottom-[-5px] h-[2px] w-[80%] ${isActivePath('/') ? 'bg-primary' : 'bg-transparent group-hover:bg-primary'} transition-all duration-200 ease-out`}></span>
               </Link>
               <Link 
                 href="/browse" 
                 className="relative group inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium"
               >
                 <span className={`${isActivePath('/browse') ? 'text-foreground' : 'text-muted-foreground group-hover:text-foreground'}`}>Browse</span>
-                <span className={`absolute left-[10%] bottom-[-2px] h-[2px] w-[80%] ${isActivePath('/browse') ? 'bg-primary' : 'bg-transparent group-hover:bg-primary'} transition-all duration-200 ease-out`}></span>
+                <span className={`absolute left-[10%] bottom-[-5px] h-[2px] w-[80%] ${isActivePath('/browse') ? 'bg-primary' : 'bg-transparent group-hover:bg-primary'} transition-all duration-200 ease-out`}></span>
               </Link>
               <Link 
                 href="/browse?type=collections" 

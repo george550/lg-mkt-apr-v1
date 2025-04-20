@@ -82,7 +82,7 @@ export default function FeaturedTemplates() {
           {featuredListings && featuredListings.length > 0 ? (
             featuredListings.map((listing) => (
               <Link key={listing.id} href={`/listing/${listing.id}`} className="w-full">
-                <Card className="h-full">
+                <Card className="h-full hover:border-gray-400 transition-colors">
                   <div className="h-40 bg-muted relative">
                     {listing.screenshots && listing.screenshots.length > 0 ? (
                       <img
