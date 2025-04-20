@@ -52,24 +52,24 @@ export default function Header() {
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
               <Link 
                 href="/" 
-                className="relative group"
+                className="relative group inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium"
               >
-                <span className={`${isActivePath('/') ? 'text-foreground' : 'text-muted-foreground group-hover:text-foreground'} inline-flex items-center px-1 pt-1 pb-3 text-sm font-medium`}>Home</span>
-                <span className={`absolute left-1 right-1 bottom-[0.4rem] h-[2px] ${isActivePath('/') ? 'bg-primary w-[calc(100%-0.5rem)]' : 'bg-transparent group-hover:bg-primary w-0 group-hover:w-[80%]'} transition-all duration-200 ease-out`}></span>
+                <span className={`${isActivePath('/') ? 'text-foreground' : 'text-muted-foreground group-hover:text-foreground'}`}>Home</span>
+                <span className={`absolute left-[10%] bottom-[-2px] h-[2px] w-[80%] ${isActivePath('/') ? 'bg-primary' : 'bg-transparent group-hover:bg-primary'} transition-all duration-200 ease-out`}></span>
               </Link>
               <Link 
                 href="/browse" 
-                className="relative group"
+                className="relative group inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium"
               >
-                <span className={`${isActivePath('/browse') ? 'text-foreground' : 'text-muted-foreground group-hover:text-foreground'} inline-flex items-center px-1 pt-1 pb-3 text-sm font-medium`}>Browse</span>
-                <span className={`absolute left-1 right-1 bottom-[0.4rem] h-[2px] ${isActivePath('/browse') ? 'bg-primary w-[calc(100%-0.5rem)]' : 'bg-transparent group-hover:bg-primary w-0 group-hover:w-[80%]'} transition-all duration-200 ease-out`}></span>
+                <span className={`${isActivePath('/browse') ? 'text-foreground' : 'text-muted-foreground group-hover:text-foreground'}`}>Browse</span>
+                <span className={`absolute left-[10%] bottom-[-2px] h-[2px] w-[80%] ${isActivePath('/browse') ? 'bg-primary' : 'bg-transparent group-hover:bg-primary'} transition-all duration-200 ease-out`}></span>
               </Link>
               <Link 
                 href="/browse?type=collections" 
-                className="relative group"
+                className="relative group inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium"
               >
-                <span className={`${isActivePath('/browse?type=collections') ? 'text-foreground' : 'text-muted-foreground group-hover:text-foreground'} inline-flex items-center px-1 pt-1 pb-3 text-sm font-medium`}>Collections</span>
-                <span className={`absolute left-1 right-1 bottom-[0.4rem] h-[2px] ${isActivePath('/browse?type=collections') ? 'bg-primary w-[calc(100%-0.5rem)]' : 'bg-transparent group-hover:bg-primary w-0 group-hover:w-[80%]'} transition-all duration-200 ease-out`}></span>
+                <span className={`${isActivePath('/browse?type=collections') ? 'text-foreground' : 'text-muted-foreground group-hover:text-foreground'}`}>Collections</span>
+                <span className={`absolute left-[10%] bottom-[-2px] h-[2px] w-[80%] ${isActivePath('/browse?type=collections') ? 'bg-primary' : 'bg-transparent group-hover:bg-primary'} transition-all duration-200 ease-out`}></span>
               </Link>
             </div>
           </div>

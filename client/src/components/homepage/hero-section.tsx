@@ -43,18 +43,21 @@ export default function HeroSection() {
 
         <div className="max-w-lg mx-auto mt-8">
           <form onSubmit={handleSearch}>
-            <div className="flex gap-2">
-              <div className="relative flex-grow">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  type="text"
-                  placeholder="Search templates, apps, or code..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-              <Button type="submit">Search</Button>
+            <div className="relative w-full">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder="Search templates, apps, or code..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 pr-24"
+              />
+              <Button 
+                type="submit" 
+                className="absolute right-1 top-1/2 -translate-y-1/2 h-8"
+              >
+                Search
+              </Button>
             </div>
           </form>
           

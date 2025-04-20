@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useLocation } from "wouter";
+import { useParams, useLocation, Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
@@ -21,7 +21,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Helmet } from "react-helmet";
-import { Loader2 } from "lucide-react";
+import { Loader2, ChevronRight, Home } from "lucide-react";
 
 export default function ListingDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -111,6 +111,31 @@ export default function ListingDetailPage() {
 
       <div className="bg-white">
         <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+          {/* Breadcrumbs */}
+          <nav className="flex mb-6 text-sm text-muted-foreground">
+            <ol className="flex items-center space-x-2">
+              <li>
+                <Link href="/" className="hover:text-foreground flex items-center">
+                  <Home className="h-4 w-4 mr-1" />
+                  <span>Home</span>
+                </Link>
+              </li>
+              <li className="flex items-center">
+                <ChevronRight className="h-4 w-4 mx-1" />
+                <Link 
+                  href={`/browse?category=${listing.categoryId}`} 
+                  className="hover:text-foreground"
+                >
+                  Category
+                </Link>
+              </li>
+              <li className="flex items-center">
+                <ChevronRight className="h-4 w-4 mx-1" />
+                <span className="text-foreground font-medium">{listing.title}</span>
+              </li>
+            </ol>
+          </nav>
+          
           {/* Listing Detail Component */}
           <ListingDetail listing={listing} />
 
@@ -190,7 +215,7 @@ export default function ListingDetailPage() {
                       You're purchasing {listing.title} for ${(listing.price / 100).toFixed(2)}.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
-                  <PaymentForm listingId={listing.id} onSuccess={() => setIsPaymentModalOpen(false)} />
+                  <PaymentForm listingId={listing.id} onSuccess={() => setIsPaymentModalOpen(false)} price={listing.price} />
                 </AlertDialogContent>
               </AlertDialog>
 

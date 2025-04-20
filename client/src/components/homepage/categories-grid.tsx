@@ -80,7 +80,7 @@ export default function CategoriesGrid() {
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4">
           {categories && categories.map((category) => (
             <Link key={category.id} href={`/browse?category=${category.id}`}>
-              <Card className="h-full">
+              <Card className="h-full hover:border-gray-400 transition-colors">
                 <CardContent className="p-4 pb-2">
                   <div className="h-10 w-10 rounded-lg flex items-center justify-center mb-3 bg-muted">
                     {category.iconName && IconMap[category.iconName] ? (
