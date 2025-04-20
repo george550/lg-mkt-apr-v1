@@ -1,6 +1,7 @@
 import { Switch, Route } from "wouter";
 import { ThemeProvider } from "next-themes";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { AuthProvider } from "@/hooks/use-auth";
 import HomePage from "@/pages/home-page";
 import AuthPage from "@/pages/auth-page";
 import BrowsePage from "@/pages/browse-page";
@@ -40,7 +41,9 @@ function App() {
   return (
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
       <TooltipProvider>
-        <Router />
+        <AuthProvider>
+          <Router />
+        </AuthProvider>
       </TooltipProvider>
     </ThemeProvider>
   );
