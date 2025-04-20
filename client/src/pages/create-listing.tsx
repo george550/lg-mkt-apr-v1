@@ -126,6 +126,14 @@ export default function CreateListing() {
   const handleRemoveScreenshotUrl = (index: number) => {
     setScreenshotUrls(screenshotUrls.filter((_, i) => i !== index));
   };
+  
+  const handleEnhancedDescription = (enhancedDescription: string) => {
+    form.setValue('description', enhancedDescription);
+    toast({
+      title: "Description enhanced",
+      description: "Your listing description has been enhanced using Claude AI",
+    });
+  };
 
   const onSubmit = async (data: CreateListingValues) => {
     if (!user) {
@@ -256,11 +264,23 @@ export default function CreateListing() {
                             placeholder="Describe your template, its features, and benefits..."
                             className="min-h-[150px]"
                             {...field}
+                            ref={(e) => {
+                              field.ref(e);
+                              descriptionFieldRef.current = e;
+                            }}
                           />
                         </FormControl>
                         <FormDescription>
                           Provide a detailed description of your template, including features, technologies used, and any special selling points
                         </FormDescription>
+                        <div className="mt-2">
+                          <EnhanceDescription 
+                            title={form.watch('title')}
+                            description={form.watch('description')}
+                            tags={tags}
+                            onSuccess={handleEnhancedDescription}
+                          />
+                        </div>
                         <FormMessage />
                       </FormItem>
                     )}
