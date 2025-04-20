@@ -4,7 +4,8 @@ import { Link } from "wouter";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, Star, Eye } from "lucide-react";
+import { ChevronRight, Eye } from "lucide-react";
+import { StarIcon } from "@/components/ui/star-icon";
 import type { Listing } from "@shared/schema";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -108,7 +109,7 @@ export default function FeaturedTemplates() {
                       </div>
                       {listing.rating && (
                         <div className="flex items-center">
-                          <Star className="h-4 w-4" />
+                          <StarIcon className="h-4 w-4 text-yellow-500" />
                           <span className="text-muted-foreground ml-1">{listing.rating.toFixed(1)}</span>
                         </div>
                       )}

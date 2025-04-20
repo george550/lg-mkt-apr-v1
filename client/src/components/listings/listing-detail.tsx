@@ -15,10 +15,10 @@ import {
 import {
   ExternalLink,
   User,
-  Star,
   Calendar,
   CheckCircle,
 } from "lucide-react";
+import { StarIcon } from "@/components/ui/star-icon";
 import type { Listing } from "@shared/schema";
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -145,11 +145,11 @@ export default function ListingDetail({ listing }: ListingDetailProps) {
               <div className="flex items-center">
                 <div className="flex">
                   {[...Array(5)].map((_, i) => (
-                    <Star
+                    <StarIcon
                       key={i}
                       className={`w-4 h-4 ${
                         i < Math.floor(listing.rating)
-                          ? "text-primary fill-primary"
+                          ? "text-yellow-500"
                           : "text-muted"
                       }`}
                     />
