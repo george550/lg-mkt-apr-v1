@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Star } from "lucide-react";
+import { StarIcon } from "@/components/ui/star-icon";
 
 const testimonials = [
   {
@@ -41,7 +41,7 @@ export default function TestimonialSection() {
                 <div className="space-y-4">
                   <div className="flex">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} />
+                      <StarIcon key={i} className="text-yellow-500 h-4 w-4" />
                     ))}
                   </div>
                   

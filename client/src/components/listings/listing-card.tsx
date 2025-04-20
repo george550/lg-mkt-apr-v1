@@ -1,7 +1,8 @@
 import { Link } from "wouter";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Eye, Star } from "lucide-react";
+import { Eye } from "lucide-react";
+import { StarIcon } from "@/components/ui/star-icon";
 import { Button } from "@/components/ui/button";
 import type { Listing } from "@shared/schema";
 
@@ -46,7 +47,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
             </div>
             {listing.rating !== null && listing.rating !== undefined && (
               <div className="flex items-center">
-                <Star className="h-4 w-4 text-primary fill-primary" />
+                <StarIcon className="h-4 w-4 text-yellow-500" />
                 <span className="text-xs text-muted-foreground ml-1">{listing.rating.toFixed(1)}</span>
               </div>
             )}
