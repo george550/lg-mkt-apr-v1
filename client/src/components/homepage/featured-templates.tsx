@@ -78,10 +78,10 @@ export default function FeaturedTemplates() {
           </Link>
         </div>
 
-        <div className="flex flex-wrap justify-start gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {featuredListings && featuredListings.length > 0 ? (
             featuredListings.map((listing) => (
-              <Link key={listing.id} href={`/listing/${listing.id}`} className="w-full sm:w-1/3 max-w-[300px]">
+              <Link key={listing.id} href={`/listing/${listing.id}`} className="w-full">
                 <Card className="h-full">
                   <div className="h-40 bg-muted relative">
                     {listing.screenshots && listing.screenshots.length > 0 ? (
