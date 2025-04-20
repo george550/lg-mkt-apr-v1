@@ -44,7 +44,7 @@ export default function CategoriesGrid() {
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {[...Array(8)].map((_, i) => (
               <Card key={i} className="overflow-hidden">
-                <CardContent className="p-6">
+                <CardContent className="pt-4 px-4">
                   <Skeleton className="h-12 w-12 rounded-lg mb-4" />
                   <Skeleton className="h-6 w-32 mb-1" />
                   <Skeleton className="h-4 w-full" />

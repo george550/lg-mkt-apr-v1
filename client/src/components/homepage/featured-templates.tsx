@@ -32,7 +32,7 @@ export default function FeaturedTemplates() {
             {[...Array(4)].map((_, i) => (
               <Card key={i}>
                 <Skeleton className="h-48 w-full" />
-                <CardContent>
+                <CardContent className="pt-4">
                   <Skeleton className="h-6 w-3/4 mb-2" />
                   <Skeleton className="h-4 w-full mb-4" />
                   <div className="flex justify-between items-center mb-4">
