@@ -1,11 +1,12 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
-import { Express } from "express";
+import { Strategy as GitHubStrategy } from "passport-github2";
+import { Express, Request, Response, NextFunction } from "express";
 import session from "express-session";
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
 import { storage } from "./storage";
-import { User as SelectUser } from "@shared/schema";
+import { User as SelectUser, InsertUser } from "@shared/schema";
 
 declare global {
   namespace Express {
@@ -28,7 +29,21 @@ async function comparePasswords(supplied: string, stored: string) {
   return timingSafeEqual(hashedBuf, suppliedBuf);
 }
 
+// Get callback URL based on environment
+function getCallbackUrl() {
+  const baseUrl = process.env.NODE_ENV === 'production' 
+    ? 'https://YOUR_PRODUCTION_DOMAIN'
+    : 'http://localhost:5000';
+  
+  return `${baseUrl}/api/auth/github/callback`;
+}
+
 export function setupAuth(app: Express) {
+  // Check for required environment variables
+  if (!process.env.GITHUB_CLIENT_ID || !process.env.GITHUB_CLIENT_SECRET) {
+    console.warn('GitHub OAuth credentials missing. GitHub authentication will not work.');
+  }
+
   const sessionSettings: session.SessionOptions = {
     secret: process.env.SESSION_SECRET || "codecraft-marketplace-secret",
     resave: false,
@@ -46,6 +61,7 @@ export function setupAuth(app: Express) {
   app.use(passport.initialize());
   app.use(passport.session());
 
+  // Local strategy (username + password)
   passport.use(
     new LocalStrategy(async (username, password, done) => {
       try {
@@ -61,6 +77,64 @@ export function setupAuth(app: Express) {
     }),
   );
 
+  // GitHub OAuth strategy
+  if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
+    passport.use(
+      new GitHubStrategy(
+        {
+          clientID: process.env.GITHUB_CLIENT_ID,
+          clientSecret: process.env.GITHUB_CLIENT_SECRET,
+          callbackURL: getCallbackUrl(),
+          scope: ['user:email'],
+        },
+        async (accessToken, refreshToken, profile, done) => {
+          try {
+            // Check if user already exists by GitHub ID
+            let user = await storage.getUserByGithubId(profile.id);
+            
+            if (!user) {
+              // Check if user exists with same email
+              const email = profile.emails && profile.emails[0]?.value;
+              if (email) {
+                user = await storage.getUserByEmail(email);
+              }
+              
+              if (!user) {
+                // Create new user
+                const username = profile.username || `github_${profile.id}`;
+                const insertUser: InsertUser = {
+                  username: username,
+                  email: email || `${username}@example.com`,
+                  password: null, // No password for OAuth users
+                  githubId: profile.id,
+                  avatar: profile.photos?.[0]?.value || null,
+                  isVerified: true, // GitHub-authenticated users are verified
+                };
+                
+                user = await storage.createUser(insertUser);
+              } else {
+                // Update existing user with GitHub ID
+                user = await storage.updateUser(user.id, {
+                  githubId: profile.id,
+                  avatar: profile.photos?.[0]?.value || user.avatar,
+                });
+              }
+            } else {
+              // Update user info from GitHub
+              user = await storage.updateUser(user.id, {
+                avatar: profile.photos?.[0]?.value || user.avatar,
+              });
+            }
+            
+            return done(null, user);
+          } catch (error) {
+            return done(error);
+          }
+        }
+      )
+    );
+  }
+
   passport.serializeUser((user, done) => done(null, user.id));
   passport.deserializeUser(async (id: number, done) => {
     try {
@@ -71,6 +145,7 @@ export function setupAuth(app: Express) {
     }
   });
 
+  // Traditional username/password registration
   app.post("/api/register", async (req, res, next) => {
     try {
       const existingUser = await storage.getUserByUsername(req.body.username);
@@ -78,9 +153,15 @@ export function setupAuth(app: Express) {
         return res.status(400).json({ message: "Username already exists" });
       }
 
+      const emailExists = await storage.getUserByEmail(req.body.email);
+      if (emailExists) {
+        return res.status(400).json({ message: "Email already exists" });
+      }
+
       const user = await storage.createUser({
         ...req.body,
         password: await hashPassword(req.body.password),
+        isVerified: false,
       });
 
       req.login(user, (err) => {
@@ -92,6 +173,7 @@ export function setupAuth(app: Express) {
     }
   });
 
+  // Traditional username/password login
   app.post("/api/login", (req, res, next) => {
     passport.authenticate("local", (err, user, info) => {
       if (err) return next(err);
@@ -104,6 +186,18 @@ export function setupAuth(app: Express) {
     })(req, res, next);
   });
 
+  // GitHub OAuth routes
+  app.get("/api/auth/github", passport.authenticate("github"));
+  
+  app.get(
+    "/api/auth/github/callback",
+    passport.authenticate("github", { failureRedirect: '/auth?error=github-auth-failed' }),
+    (req, res) => {
+      // Successful authentication, redirect to dashboard or home
+      res.redirect('/dashboard/buyer');
+    }
+  );
+
   app.post("/api/logout", (req, res, next) => {
     req.logout((err) => {
       if (err) return next(err);
@@ -114,5 +208,13 @@ export function setupAuth(app: Express) {
   app.get("/api/user", (req, res) => {
     if (!req.isAuthenticated()) return res.sendStatus(401);
     res.json(req.user);
+  });
+
+  // Auth check middleware for protected routes
+  app.use("/api/protected", (req: Request, res: Response, next: NextFunction) => {
+    if (req.isAuthenticated()) {
+      return next();
+    }
+    res.status(401).json({ message: "Unauthorized" });
   });
 }
