@@ -5,12 +5,15 @@ import { z } from "zod";
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
-  password: text("password").notNull(),
-  email: text("email"),
+  password: text("password"),  // No longer required for OAuth users
+  email: text("email").notNull().unique(),
   avatarUrl: text("avatar_url"),
   bio: text("bio"),
   isVerified: boolean("is_verified").default(false),
   rating: doublePrecision("rating"),
+  githubId: text("github_id").unique(),  // GitHub OAuth ID
+  avatar: text("avatar"),               // User's avatar from GitHub
+  lastLogin: timestamp("last_login"),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -79,6 +82,14 @@ export const insertUserSchema = createInsertSchema(users).pick({
   email: true,
   avatarUrl: true,
   bio: true,
+  githubId: true,
+  avatar: true,
+  isVerified: true,
+});
+
+// Modify the schema to make password optional
+export const insertUserSchemaWithOptionalPassword = insertUserSchema.extend({
+  password: z.string().nullable().optional(),
 });
 
 export const insertCategorySchema = createInsertSchema(categories).pick({

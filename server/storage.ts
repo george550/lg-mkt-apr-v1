@@ -30,7 +30,10 @@ export interface IStorage {
   // User methods
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
+  getUserByEmail(email: string): Promise<User | undefined>;
+  getUserByGithubId(githubId: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
+  updateUser(id: number, updates: Partial<InsertUser>): Promise<User>;
   
   // Category methods
   getAllCategories(): Promise<Category[]>;
@@ -112,18 +115,44 @@ export class MemStorage implements IStorage {
     );
   }
 
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    return Array.from(this.users.values()).find(
+      (user) => user.email && user.email.toLowerCase() === email.toLowerCase(),
+    );
+  }
+
+  async getUserByGithubId(githubId: string): Promise<User | undefined> {
+    return Array.from(this.users.values()).find(
+      (user) => user.githubId === githubId,
+    );
+  }
+
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = this.userIdCounter++;
     const now = new Date();
     const user: User = { 
       ...insertUser, 
       id, 
-      isVerified: false,
+      isVerified: insertUser.isVerified !== undefined ? insertUser.isVerified : false,
       rating: 0,
-      createdAt: now
+      createdAt: now,
+      lastLogin: now,
     };
     this.users.set(id, user);
     return user;
+  }
+
+  async updateUser(id: number, updates: Partial<InsertUser>): Promise<User> {
+    const user = this.users.get(id);
+    if (!user) throw new Error("User not found");
+    
+    const updatedUser: User = {
+      ...user,
+      ...updates,
+    };
+    
+    this.users.set(id, updatedUser);
+    return updatedUser;
   }
 
   // Category methods
@@ -417,8 +446,33 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users.email, email));
+    return user;
+  }
+  
+  async getUserByGithubId(githubId: string): Promise<User | undefined> {
+    const [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users.githubId, githubId));
+    return user;
+  }
+
   async createUser(insertUser: InsertUser): Promise<User> {
     const [user] = await db.insert(users).values(insertUser).returning();
+    return user;
+  }
+  
+  async updateUser(id: number, updates: Partial<InsertUser>): Promise<User> {
+    const [user] = await db
+      .update(users)
+      .set(updates)
+      .where(eq(users.id, id))
+      .returning();
     return user;
   }
 
