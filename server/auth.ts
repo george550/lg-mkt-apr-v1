@@ -197,8 +197,17 @@ export function setupAuth(app: Express) {
   app.get(
     "/api/auth/github/callback",
     (req, res, next) => {
+      // Log all parameters coming in
+      console.log('GitHub callback received:', { 
+        query: req.query,
+        url: req.url,
+        path: req.path,
+        headers: req.headers
+      });
+      
       // Handle errors before passport processes the request
       if (req.query.error) {
+        console.error('GitHub auth error:', req.query);
         return res.redirect(`/auth?error=github-auth-failed&reason=${req.query.error_description || 'Unknown error'}`);
       }
       
@@ -206,23 +215,42 @@ export function setupAuth(app: Express) {
       passport.authenticate("github", { 
         failureRedirect: '/auth?error=github-auth-failed',
         failureMessage: true
+      }, (err, user, info) => {
+        // Log authentication results
+        console.log('GitHub auth result:', { err, user: user ? 'User found' : 'No user', info });
+        
+        if (err) {
+          console.error('GitHub auth error:', err);
+          return res.redirect('/auth?error=github-auth-failed&reason=' + encodeURIComponent(err.message));
+        }
+        
+        if (!user) {
+          console.error('GitHub auth failed - no user:', info);
+          return res.redirect('/auth?error=github-auth-failed&reason=Authentication failed');
+        }
+        
+        // Login the user
+        req.login(user, (loginErr) => {
+          if (loginErr) {
+            console.error('Login error after GitHub auth:', loginErr);
+            return res.redirect('/auth?error=github-auth-failed&reason=' + encodeURIComponent(loginErr.message));
+          }
+          
+          // Determine if this was a link request
+          const isLinkRequest = req.query.state === 'link-account';
+          
+          // Update last login time
+          storage.updateUser(user.id, { 
+            lastLogin: new Date(),
+            isVerified: true // Ensure GitHub users are always verified
+          })
+          .catch(err => console.error("Failed to update user data:", err));
+          
+          // Successful authentication, redirect appropriately
+          console.log('GitHub auth successful, redirecting to:', isLinkRequest ? '/dashboard/settings' : '/dashboard/buyer');
+          res.redirect(isLinkRequest ? '/dashboard/settings' : '/dashboard/buyer');
+        });
       })(req, res, next);
-    },
-    (req, res) => {
-      // Determine if this was a link request
-      const isLinkRequest = req.query.state === 'link-account';
-      
-      // Update last login time
-      if (req.user) {
-        storage.updateUser(req.user.id, { 
-          lastLogin: new Date(),
-          isVerified: true // Ensure GitHub users are always verified
-        })
-        .catch(err => console.error("Failed to update user data:", err));
-      }
-      
-      // Successful authentication, redirect appropriately
-      res.redirect(isLinkRequest ? '/dashboard/settings' : '/dashboard/buyer');
     }
   );
 

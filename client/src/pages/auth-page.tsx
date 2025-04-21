@@ -224,9 +224,9 @@ export default function AuthPage() {
                           </div>
                         </div>
                         
-                        <a href="/api/auth/github" className="w-full">
+                        <form method="GET" action="/api/auth/github">
                           <Button 
-                            type="button"
+                            type="submit"
                             variant="outline"
                             className="w-full flex items-center gap-2"
                           >
@@ -239,7 +239,7 @@ export default function AuthPage() {
                             </svg>
                             Continue with GitHub
                           </Button>
-                        </a>
+                        </form>
                       </form>
                     </Form>
                   </CardContent>
@@ -340,9 +340,9 @@ export default function AuthPage() {
                           </div>
                         </div>
                         
-                        <a href="/api/auth/github" className="w-full">
+                        <form method="GET" action="/api/auth/github">
                           <Button 
-                            type="button"
+                            type="submit"
                             variant="outline"
                             className="w-full flex items-center gap-2"
                           >
@@ -355,7 +355,7 @@ export default function AuthPage() {
                             </svg>
                             Register with GitHub
                           </Button>
-                        </a>
+                        </form>
                       </form>
                     </Form>
                   </CardContent>
