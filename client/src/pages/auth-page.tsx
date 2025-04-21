@@ -18,6 +18,8 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { insertUserSchema } from "@shared/schema";
 import { Helmet } from "react-helmet";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 // Login schema
 const loginSchema = z.object({
@@ -61,8 +63,24 @@ export default function AuthPage() {
     console.log("Auth context not available yet");
   }
 
-  // Redirect to home if already logged in
+  // Check for error parameters in URL
+  const searchParams = new URLSearchParams(window.location.search);
+  const [authError, setAuthError] = useState<string | null>(null);
+  
   useEffect(() => {
+    // Handle GitHub auth errors
+    const urlError = searchParams.get("error");
+    const errorReason = searchParams.get("reason");
+    
+    if (urlError === "github-auth-failed") {
+      setAuthError(
+        errorReason 
+          ? `GitHub authentication failed: ${errorReason}`
+          : "GitHub authentication failed. Please try again or use another login method."
+      );
+    }
+    
+    // Redirect to home if already logged in
     if (user) {
       navigate("/");
     }
@@ -129,6 +147,14 @@ export default function AuthPage() {
                   : "Create a new account to get started"}
               </p>
             </div>
+            
+            {authError && (
+              <Alert variant="destructive" className="mt-4">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Authentication Error</AlertTitle>
+                <AlertDescription>{authError}</AlertDescription>
+              </Alert>
+            )}
 
             <Tabs
               defaultValue="login"

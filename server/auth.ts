@@ -188,22 +188,41 @@ export function setupAuth(app: Express) {
   });
 
   // GitHub OAuth routes
-  app.get("/api/auth/github", passport.authenticate("github"));
+  app.get("/api/auth/github", (req, res, next) => {
+    // Add state parameter to track the auth request
+    const state = req.query.mode === 'link' ? 'link-account' : '';
+    passport.authenticate("github", { state })(req, res, next);
+  });
   
   app.get(
     "/api/auth/github/callback",
-    passport.authenticate("github", { 
-      failureRedirect: '/auth?error=github-auth-failed',
-      failureMessage: true
-    }),
+    (req, res, next) => {
+      // Handle errors before passport processes the request
+      if (req.query.error) {
+        return res.redirect(`/auth?error=github-auth-failed&reason=${req.query.error_description || 'Unknown error'}`);
+      }
+      
+      // Continue with passport authentication
+      passport.authenticate("github", { 
+        failureRedirect: '/auth?error=github-auth-failed',
+        failureMessage: true
+      })(req, res, next);
+    },
     (req, res) => {
+      // Determine if this was a link request
+      const isLinkRequest = req.query.state === 'link-account';
+      
       // Update last login time
       if (req.user) {
-        storage.updateUser(req.user.id, { lastLogin: new Date() })
-          .catch(err => console.error("Failed to update last login:", err));
+        storage.updateUser(req.user.id, { 
+          lastLogin: new Date(),
+          isVerified: true // Ensure GitHub users are always verified
+        })
+        .catch(err => console.error("Failed to update user data:", err));
       }
-      // Successful authentication, redirect to dashboard or home
-      res.redirect('/dashboard/buyer');
+      
+      // Successful authentication, redirect appropriately
+      res.redirect(isLinkRequest ? '/dashboard/settings' : '/dashboard/buyer');
     }
   );
 
