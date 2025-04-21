@@ -85,6 +85,7 @@ export const insertUserSchema = createInsertSchema(users).pick({
   githubId: true,
   avatar: true,
   isVerified: true,
+  lastLogin: true,
 });
 
 // Modify the schema to make password optional

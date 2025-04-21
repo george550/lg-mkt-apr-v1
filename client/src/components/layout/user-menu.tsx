@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,12 +7,25 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { useAuth } from "@/hooks/use-auth";
 import { Link } from "wouter";
 import { LogOut, User, ShoppingBag, Package } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 export function UserMenu() {
   const { user, logoutMutation } = useAuth();
+  const { toast } = useToast();
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   if (!user) return null;
 
@@ -23,8 +36,26 @@ export function UserMenu() {
     .join("")
     .toUpperCase();
 
+  const handleLogoutClick = () => {
+    setShowLogoutConfirm(true);
+  };
+
   const handleLogout = () => {
-    logoutMutation.mutate();
+    logoutMutation.mutate(undefined, {
+      onSuccess: () => {
+        toast({
+          title: "Logged out successfully",
+          description: "Your session has been ended",
+        });
+      },
+      onError: (error) => {
+        toast({
+          title: "Logout failed",
+          description: error.message || "There was a problem logging you out",
+          variant: "destructive",
+        });
+      }
+    });
   };
 
   return (
@@ -67,11 +98,29 @@ export function UserMenu() {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleLogout}>
+        <DropdownMenuItem onClick={handleLogoutClick}>
           <LogOut className="mr-2 h-4 w-4" />
           Logout
         </DropdownMenuItem>
       </DropdownMenuContent>
+
+      {/* Logout confirmation dialog */}
+      <AlertDialog open={showLogoutConfirm} onOpenChange={setShowLogoutConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure you want to logout?</AlertDialogTitle>
+            <AlertDialogDescription>
+              You will need to sign in again to access your account.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleLogout} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              {logoutMutation.isPending ? "Logging out..." : "Logout"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </DropdownMenu>
   );
 }
