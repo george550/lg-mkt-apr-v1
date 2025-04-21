@@ -139,8 +139,8 @@ export default function ListingDetailPage() {
           {/* Listing Detail Component */}
           <ListingDetail listing={listing} />
 
-          {/* Tabs Section */}
-          <div className="mt-12 border-t border-gray-200 pt-12">
+          {/* Tabs Section - Clear both left and right columns */}
+          <div className="mt-12 border-t border-gray-200 pt-12 clear-both">
             <Tabs defaultValue="overview">
               <TabsList className="mb-8">
                 <TabsTrigger value="overview">Overview</TabsTrigger>
