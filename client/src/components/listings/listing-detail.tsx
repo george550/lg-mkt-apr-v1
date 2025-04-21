@@ -44,7 +44,7 @@ export default function ListingDetail({ listing }: ListingDetailProps) {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      {/* Left column - Images */}
+      {/* Left column - Images and Demo Link */}
       <div className="lg:col-span-2">
         <div className="mb-4">
           <Carousel
