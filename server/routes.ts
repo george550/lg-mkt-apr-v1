@@ -23,6 +23,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication routes
   setupAuth(app);
 
+  // Debug OAuth routes
+  app.get("/api/debug/oauth", (req: Request, res: Response) => {
+    // Don't show actual secret values, just info needed for debugging
+    res.json({
+      callbackUrl: 'https://workspace.g028.repl.co/api/auth/github/callback',
+      clientId: process.env.GITHUB_CLIENT_ID || null
+    });
+  });
+
   // Categories routes
   app.get("/api/categories", async (req: Request, res: Response) => {
     try {

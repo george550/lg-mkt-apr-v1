@@ -10,6 +10,7 @@ import DashboardPage from "@/pages/dashboard";
 import BuyerDashboard from "@/pages/dashboard/buyer";
 import SellerDashboard from "@/pages/dashboard/seller";
 import CreateListing from "@/pages/create-listing";
+import DebugOAuthPage from "@/pages/debug-oauth";
 import NotFound from "@/pages/not-found";
 import { ProtectedRoute } from "./lib/protected-route";
 import Header from "@/components/ui/header";
@@ -29,6 +30,7 @@ function Router() {
           <ProtectedRoute path="/dashboard/buyer" component={BuyerDashboard} />
           <ProtectedRoute path="/dashboard/seller" component={SellerDashboard} />
           <ProtectedRoute path="/create-listing" component={CreateListing} />
+          <Route path="/debug-oauth" component={DebugOAuthPage} />
           <Route component={NotFound} />
         </Switch>
       </main>
