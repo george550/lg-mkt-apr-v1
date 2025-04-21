@@ -32,6 +32,8 @@ async function comparePasswords(supplied: string, stored: string) {
 // Get callback URL based on environment
 function getCallbackUrl() {
   // Use the exact URL from the GitHub OAuth application settings
+  // IMPORTANT: This must EXACTLY match what's configured in GitHub's OAuth app settings
+  // Do not change this unless GitHub OAuth app settings are also updated
   return 'https://workspace.g028.repl.co/api/auth/github/callback';
 }
 
