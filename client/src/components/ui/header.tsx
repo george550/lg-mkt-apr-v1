@@ -11,6 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { UserMenu } from "@/components/layout/user-menu";
 import { Menu, X, User, LogOut, Settings, ShoppingCart, Code, Sun, Moon, Laptop } from "lucide-react";
 
 export default function Header() {
@@ -92,39 +93,7 @@ export default function Header() {
                 <Link href="/create-listing">
                   <Button>Sell Your Code</Button>
                 </Link>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="rounded-full">
-                      <User className="h-5 w-5" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                    <DropdownMenuItem>
-                      <Link href="/dashboard" className="flex items-center">
-                        <Settings className="mr-2 h-4 w-4" />
-                        <span>Dashboard</span>
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <Link href="/dashboard/buyer" className="flex items-center">
-                        <ShoppingCart className="mr-2 h-4 w-4" />
-                        <span>My Purchases</span>
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <Link href="/dashboard/seller" className="flex items-center">
-                        <Code className="mr-2 h-4 w-4" />
-                        <span>My Listings</span>
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleLogout}>
-                      <LogOut className="mr-2 h-4 w-4" />
-                      <span>Logout</span>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <UserMenu />
               </>
             ) : (
               <Link href="/auth">
@@ -195,7 +164,17 @@ export default function Header() {
               <div>
                 <div className="flex items-center px-4">
                   <div className="flex-shrink-0">
-                    <User className="h-10 w-10 rounded-full bg-muted p-2" />
+                    {user.avatar ? (
+                      <img 
+                        src={user.avatar} 
+                        alt={user.username} 
+                        className="h-10 w-10 rounded-full" 
+                      />
+                    ) : (
+                      <div className="h-10 w-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-medium">
+                        {user.username.charAt(0).toUpperCase()}
+                      </div>
+                    )}
                   </div>
                   <div className="ml-3">
                     <div className="text-base font-medium">{user.username}</div>

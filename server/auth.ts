@@ -53,6 +53,7 @@ export function setupAuth(app: Express) {
       maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
+      sameSite: 'lax' // Protects against CSRF attacks
     }
   };
 
@@ -191,8 +192,16 @@ export function setupAuth(app: Express) {
   
   app.get(
     "/api/auth/github/callback",
-    passport.authenticate("github", { failureRedirect: '/auth?error=github-auth-failed' }),
+    passport.authenticate("github", { 
+      failureRedirect: '/auth?error=github-auth-failed',
+      failureMessage: true
+    }),
     (req, res) => {
+      // Update last login time
+      if (req.user) {
+        storage.updateUser(req.user.id, { lastLogin: new Date() })
+          .catch(err => console.error("Failed to update last login:", err));
+      }
       // Successful authentication, redirect to dashboard or home
       res.redirect('/dashboard/buyer');
     }
