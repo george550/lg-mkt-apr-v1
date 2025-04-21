@@ -63,7 +63,7 @@ export default function ListingFilters({
   };
   
   return (
-    <Card className="w-[250px]">
+    <Card className="w-full">
       <CardContent className="p-4 py-5">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-semibold">Filters</h3>

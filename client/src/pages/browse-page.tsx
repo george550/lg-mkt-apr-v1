@@ -82,20 +82,22 @@ export default function BrowsePage() {
             </form>
           </div>
           
-          <div className="grid grid-cols-12 gap-8">
+          <div className="flex flex-col lg:flex-row gap-8">
             {/* Filters Sidebar */}
-            <div className="col-span-12 lg:col-span-3">
-              <ListingFilters
-                initialCategoryId={filters.categoryId}
-                initialPriceMin={filters.priceMin}
-                initialPriceMax={filters.priceMax}
-                initialRating={filters.minRating}
-                onFiltersChange={handleFiltersChange}
-              />
+            <div className="w-full lg:w-64 flex-shrink-0">
+              <div className="sticky top-4">
+                <ListingFilters
+                  initialCategoryId={filters.categoryId}
+                  initialPriceMin={filters.priceMin}
+                  initialPriceMax={filters.priceMax}
+                  initialRating={filters.minRating}
+                  onFiltersChange={handleFiltersChange}
+                />
+              </div>
             </div>
             
             {/* Listings Grid */}
-            <div className="col-span-12 lg:col-span-9">
+            <div className="flex-grow">
               {searchTerm && (
                 <div className="mb-6">
                   <h2 className="text-xl font-semibold">
