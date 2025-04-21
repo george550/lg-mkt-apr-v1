@@ -31,11 +31,9 @@ async function comparePasswords(supplied: string, stored: string) {
 
 // Get callback URL based on environment
 function getCallbackUrl() {
-  const baseUrl = process.env.NODE_ENV === 'production' 
-    ? 'https://YOUR_PRODUCTION_DOMAIN'
-    : 'http://localhost:5000';
-  
-  return `${baseUrl}/api/auth/github/callback`;
+  // For Replit, use the actual domain from the Replit environment
+  // This ensures the URL matches what's configured in GitHub OAuth settings
+  return 'https://workspace.g028.repl.co/api/auth/github/callback';
 }
 
 export function setupAuth(app: Express) {
@@ -80,12 +78,15 @@ export function setupAuth(app: Express) {
 
   // GitHub OAuth strategy
   if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
+    const callbackUrl = getCallbackUrl();
+    console.log('GitHub OAuth callback URL:', callbackUrl);
+    
     passport.use(
       new GitHubStrategy(
         {
           clientID: process.env.GITHUB_CLIENT_ID,
           clientSecret: process.env.GITHUB_CLIENT_SECRET,
-          callbackURL: getCallbackUrl(),
+          callbackURL: callbackUrl,
           scope: ['user:email'],
         },
         async (accessToken, refreshToken, profile, done) => {
