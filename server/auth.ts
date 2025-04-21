@@ -31,8 +31,7 @@ async function comparePasswords(supplied: string, stored: string) {
 
 // Get callback URL based on environment
 function getCallbackUrl() {
-  // For Replit, use the actual domain from the Replit environment
-  // This ensures the URL matches what's configured in GitHub OAuth settings
+  // Use the exact URL from the GitHub OAuth application settings
   return 'https://workspace.g028.repl.co/api/auth/github/callback';
 }
 
