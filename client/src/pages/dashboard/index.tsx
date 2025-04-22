@@ -4,6 +4,9 @@ import { useAuth } from "@/hooks/use-auth";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import DashboardSidebar from "@/components/dashboard/dashboard-sidebar";
 import { Helmet } from "react-helmet";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 
 export default function DashboardPage() {
   const { user, isLoading } = useAuth();
@@ -22,7 +25,7 @@ export default function DashboardPage() {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-[60vh]">
-        <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full"></div>
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -34,11 +37,11 @@ export default function DashboardPage() {
         <meta name="description" content="Manage your purchases, quotes, listings, and earnings" />
       </Helmet>
 
-      <div className="bg-gray-50 min-h-screen">
+      <div className="bg-background min-h-screen">
         <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-            <p className="mt-2 text-gray-600">
+            <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
+            <p className="mt-2 text-muted-foreground">
               Manage your purchases, quotes, listings, and earnings
             </p>
           </div>
@@ -50,45 +53,61 @@ export default function DashboardPage() {
             </div>
 
             {/* Main Content */}
-            <div className="flex-1 bg-white rounded-lg shadow-sm p-6">
-              <Tabs
-                defaultValue="buyer"
-                onValueChange={handleTabChange}
-                className="mb-8"
-              >
-                <TabsList>
-                  <TabsTrigger value="buyer">Buyer Dashboard</TabsTrigger>
-                  <TabsTrigger value="seller">Seller Dashboard</TabsTrigger>
-                </TabsList>
-              </Tabs>
+            <Card className="flex-1">
+              <CardContent className="p-6">
+                <Tabs
+                  defaultValue="buyer"
+                  onValueChange={handleTabChange}
+                  className="mb-8"
+                >
+                  <TabsList>
+                    <TabsTrigger value="buyer">Buyer Dashboard</TabsTrigger>
+                    <TabsTrigger value="seller">Seller Dashboard</TabsTrigger>
+                  </TabsList>
+                </Tabs>
 
-              <div className="text-center py-12">
-                <h2 className="text-xl font-semibold text-gray-700 mb-3">Welcome to Your Dashboard</h2>
-                <p className="text-gray-600 max-w-lg mx-auto mb-6">
-                  Select an option from the sidebar to manage your purchases, quotes, listings, or earnings.
-                </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-lg mx-auto">
-                  <button
-                    onClick={() => navigate("/dashboard/buyer")}
-                    className="p-6 border rounded-lg hover:bg-gray-50 transition-colors"
-                  >
-                    <h3 className="font-semibold text-lg mb-2">Buyer Dashboard</h3>
-                    <p className="text-sm text-gray-500">
-                      View your purchased templates and quote requests
-                    </p>
-                  </button>
-                  <button
-                    onClick={() => navigate("/dashboard/seller")}
-                    className="p-6 border rounded-lg hover:bg-gray-50 transition-colors"
-                  >
-                    <h3 className="font-semibold text-lg mb-2">Seller Dashboard</h3>
-                    <p className="text-sm text-gray-500">
-                      Manage your listings, earnings, and incoming quote requests
-                    </p>
-                  </button>
+                <div className="text-center py-12">
+                  <h2 className="text-xl font-semibold text-foreground mb-3">Welcome to Your Dashboard</h2>
+                  <p className="text-muted-foreground max-w-lg mx-auto mb-6">
+                    Select an option from the sidebar to manage your purchases, quotes, listings, or earnings.
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-lg mx-auto">
+                    <Card className="transition-colors hover:bg-accent">
+                      <CardContent className="p-6">
+                        <Button 
+                          onClick={() => navigate("/dashboard/buyer")} 
+                          variant="ghost"
+                          className="w-full h-full p-0 hover:bg-transparent"
+                        >
+                          <div className="text-left w-full">
+                            <h3 className="font-semibold text-lg mb-2 text-foreground">Buyer Dashboard</h3>
+                            <p className="text-sm text-muted-foreground">
+                              View your purchased templates and quote requests
+                            </p>
+                          </div>
+                        </Button>
+                      </CardContent>
+                    </Card>
+                    <Card className="transition-colors hover:bg-accent">
+                      <CardContent className="p-6">
+                        <Button 
+                          onClick={() => navigate("/dashboard/seller")} 
+                          variant="ghost"
+                          className="w-full h-full p-0 hover:bg-transparent"
+                        >
+                          <div className="text-left w-full">
+                            <h3 className="font-semibold text-lg mb-2 text-foreground">Seller Dashboard</h3>
+                            <p className="text-sm text-muted-foreground">
+                              Manage your listings, earnings, and incoming quote requests
+                            </p>
+                          </div>
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  </div>
                 </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
