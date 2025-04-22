@@ -20,6 +20,7 @@ export default function Header() {
   const [location] = useLocation();
   const { theme, setTheme } = useTheme();
   const [forceLogout, setForceLogout] = useState(false);
+  const [forceLogin, setForceLogin] = useState(false);
   
   // Safe way to access auth context
   let user = null;
@@ -36,21 +37,30 @@ export default function Header() {
     console.log("Auth context not available yet");
   }
   
-  // Listen for user-logout event
+  // Listen for user auth events
   useEffect(() => {
     const handleForceLogout = () => {
       console.log("Force logout event received!");
       setForceLogout(true);
+      setForceLogin(false);
       // Force window reload after a short delay if needed
       setTimeout(() => {
         window.location.reload();
       }, 200);
     };
     
+    const handleForceLogin = () => {
+      console.log("Force login event received!");
+      setForceLogin(true);
+      setForceLogout(false);
+    };
+    
     window.addEventListener('user-logout', handleForceLogout);
+    window.addEventListener('user-login', handleForceLogin);
     
     return () => {
       window.removeEventListener('user-logout', handleForceLogout);
+      window.removeEventListener('user-login', handleForceLogin);
     };
   }, []);
   
@@ -114,12 +124,12 @@ export default function Header() {
               <span className="sr-only">Toggle theme</span>
             </Button>
 
-            {user && !forceLogout ? (
+            {(user && !forceLogout) || forceLogin ? (
               <>
                 <Link href="/create-listing">
                   <Button>Sell Your Code</Button>
                 </Link>
-                <UserMenu user={user} />
+                {user && <UserMenu user={user} />}
               </>
             ) : (
               <LoginButton />
@@ -184,8 +194,9 @@ export default function Header() {
           </div>
           
           <div className="pt-4 pb-3 border-t border-border">
-            {user && !forceLogout ? (
+            {((user && !forceLogout) || forceLogin) ? (
               <div>
+                {user && (
                 <div className="flex items-center px-4">
                   <div className="flex-shrink-0">
                     {user.avatar ? (
@@ -205,6 +216,7 @@ export default function Header() {
                     <div className="text-sm font-medium text-muted-foreground">{user.email}</div>
                   </div>
                 </div>
+                )}
                 <div className="mt-3 space-y-1">
                   <Link 
                     href="/dashboard" 

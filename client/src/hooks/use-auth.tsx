@@ -55,6 +55,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const loginMutation = useMutation({
     mutationFn: async (credentials: LoginData) => {
+      // Trigger login event
+      window.dispatchEvent(new Event('user-login'));
+
+      // Set user data in state
       const res = await apiRequest("POST", "/api/login", credentials);
       return await res.json();
     },
@@ -77,6 +81,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const registerMutation = useMutation({
     mutationFn: async (credentials: InsertUser) => {
+      // Trigger login event
+      window.dispatchEvent(new Event('user-login'));
+      
       const res = await apiRequest("POST", "/api/register", credentials);
       return await res.json();
     },
