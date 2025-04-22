@@ -42,26 +42,11 @@ export default function AuthPage() {
   const [activeTab, setActiveTab] = useState<string>("login");
   const [, navigate] = useLocation();
   
-  // Create fallback mutations to prevent errors
-  const defaultMutation = {
-    isPending: false,
-    mutate: () => console.error("Mutation not available")
-  };
-  
   // Handle auth context safely
-  let user = null;
-  let loginMutation = defaultMutation;
-  let registerMutation = defaultMutation;
+  const { user, loginMutation, registerMutation } = useAuth();
   
-  try {
-    const auth = useAuth();
-    user = auth.user;
-    loginMutation = auth.loginMutation || defaultMutation;
-    registerMutation = auth.registerMutation || defaultMutation;
-  } catch (e) {
-    // Auth context not available yet
-    console.log("Auth context not available yet");
-  }
+  // Check if the auth context is fully loaded
+  const isAuthReady = Boolean(user !== undefined && loginMutation && registerMutation);
 
   // Check for error parameters in URL
   const searchParams = new URLSearchParams(window.location.search);

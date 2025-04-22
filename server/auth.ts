@@ -48,11 +48,13 @@ export function setupAuth(app: Express) {
     resave: false,
     saveUninitialized: false,
     store: storage.sessionStore,
+    name: "codecraft.sid", // Custom name for better security (not the default connect.sid)
     cookie: {
-      maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: 'lax' // Protects against CSRF attacks
+      maxAge: 1000 * 60 * 60 * 24, // 24 hours (shorter session timeout)
+      httpOnly: true, // Prevents client-side JS from reading the cookie
+      secure: process.env.NODE_ENV === "production", // Secure in production
+      sameSite: 'lax', // Protects against CSRF attacks
+      path: '/' // Ensure cookie is available across the application
     }
   };
 
@@ -60,6 +62,54 @@ export function setupAuth(app: Express) {
   app.use(session(sessionSettings));
   app.use(passport.initialize());
   app.use(passport.session());
+  
+  // Middleware to check for session expiry
+  app.use((req: Request, res: Response, next: NextFunction) => {
+    if (req.isAuthenticated()) {
+      const now = new Date();
+      // Add lastActivity to session (extend Express.Session)
+      const lastActivity: Date = (req.session as any).lastActivity || now;
+      const timeSinceLastActivity = now.getTime() - new Date(lastActivity).getTime();
+      
+      // Session timeout (24 hours of inactivity)
+      const maxInactivityTime = 24 * 60 * 60 * 1000;
+      
+      if (timeSinceLastActivity > maxInactivityTime) {
+        // Session expired, log the user out
+        req.logout((err) => {
+          if (err) {
+            console.error("Error logging out expired session:", err);
+          }
+          req.session.destroy((err) => {
+            if (err) {
+              console.error("Error destroying expired session:", err);
+            }
+            // Clear cookie
+            res.clearCookie('codecraft.sid', {
+              path: '/',
+              httpOnly: true,
+              secure: process.env.NODE_ENV === "production",
+              sameSite: 'lax'
+            });
+            
+            // For API routes, send unauthorized status
+            if (req.path.startsWith('/api/')) {
+              return res.status(401).json({ message: "Session expired" });
+            }
+            
+            // For regular routes, continue (client will redirect to login)
+            return next();
+          });
+        });
+      } else {
+        // Update last activity time
+        (req.session as any).lastActivity = now;
+        next();
+      }
+    } else {
+      next();
+    }
+  });
 
   // Local strategy (username + password)
   passport.use(
@@ -268,8 +318,8 @@ export function setupAuth(app: Express) {
   );
 
   app.post("/api/logout", (req, res, next) => {
-    // Session cookie name is typically 'connect.sid'
-    const cookieName = 'connect.sid';
+    // Use the same cookie name as defined in session settings
+    const cookieName = 'codecraft.sid';
     
     req.logout((err) => {
       if (err) return next(err);
