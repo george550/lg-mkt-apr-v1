@@ -210,7 +210,18 @@ export function setupAuth(app: Express) {
       // Handle errors before passport processes the request
       if (req.query.error) {
         console.error('GitHub auth error:', req.query);
-        return res.redirect(`/auth?error=github-auth-failed&reason=${req.query.error_description || 'Unknown error'}`);
+        
+        // Handle specific error types
+        if (req.query.error === 'access_denied') {
+          return res.redirect('/auth?error=access-denied');
+        }
+        
+        if (req.query.error === 'redirect_uri_mismatch') {
+          console.error('CRITICAL: Redirect URI mismatch. Check GitHub OAuth app settings!');
+          return res.redirect('/auth?error=server-error&reason=redirect_uri_mismatch');
+        }
+        
+        return res.redirect(`/auth?error=github-auth-failed&reason=${encodeURIComponent(String(req.query.error_description || 'Unknown error'))}`);
       }
       
       // Continue with passport authentication

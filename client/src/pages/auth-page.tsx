@@ -78,13 +78,19 @@ export default function AuthPage() {
           ? `GitHub authentication failed: ${errorReason}`
           : "GitHub authentication failed. Please try again or use another login method."
       );
+    } else if (urlError === "access-denied") {
+      setAuthError("You did not grant permission to access your GitHub account.");
+    } else if (urlError === "server-error") {
+      setAuthError("There was a server error during authentication. Please try again later.");
     }
     
     // Redirect to home if already logged in
     if (user) {
+      // Clear any error parameters from URL and redirect to home
+      window.history.replaceState({}, document.title, "/auth");
       navigate("/");
     }
-  }, [user, navigate]);
+  }, [user, navigate, searchParams]);
 
   const loginForm = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
