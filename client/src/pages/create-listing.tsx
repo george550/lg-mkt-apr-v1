@@ -295,7 +295,7 @@ export default function CreateListing() {
                           <FormLabel>Price ($)</FormLabel>
                           <FormControl>
                             <div className="relative">
-                              <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">$</span>
+                              <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-muted-foreground">$</span>
                               <Input
                                 type="number"
                                 min="0"
@@ -333,7 +333,7 @@ export default function CreateListing() {
                               {categoriesLoading ? (
                                 <div className="p-2 text-center">
                                   <Loader2 className="h-4 w-4 animate-spin mx-auto" />
-                                  <span className="text-sm text-gray-500">Loading...</span>
+                                  <span className="text-sm text-muted-foreground">Loading...</span>
                                 </div>
                               ) : (
                                 categories?.map((category) => (
@@ -377,12 +377,12 @@ export default function CreateListing() {
                     <FormLabel>Tags</FormLabel>
                     <div className="flex flex-wrap gap-2 mb-2">
                       {tags.map((tag) => (
-                        <Badge key={tag} className="bg-primary-100 text-primary-800">
+                        <Badge key={tag} variant="outline" className="bg-primary/10 text-primary">
                           {tag}
                           <button
                             type="button"
                             onClick={() => handleRemoveTag(tag)}
-                            className="ml-1 text-primary-600 hover:text-primary-800"
+                            className="ml-1 text-primary hover:text-primary/80"
                           >
                             <X className="h-3 w-3" />
                           </button>
@@ -476,8 +476,8 @@ export default function CreateListing() {
                 </form>
               </Form>
             </CardContent>
-            <CardFooter className="border-t px-6 py-4 bg-gray-50">
-              <div className="text-sm text-gray-500">
+            <CardFooter className="border-t px-6 py-4 bg-muted/50">
+              <div className="text-sm text-muted-foreground">
                 By creating a listing, you agree to our{" "}
                 <a href="/terms" className="text-primary hover:underline">
                   Terms of Service
