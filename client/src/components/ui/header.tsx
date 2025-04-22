@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
@@ -19,8 +19,6 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [location] = useLocation();
   const { theme, setTheme } = useTheme();
-  const [forceLogout, setForceLogout] = useState(false);
-  const [forceLogin, setForceLogin] = useState(false);
   
   // Safe way to access auth context
   let user = null;
@@ -30,39 +28,9 @@ export default function Header() {
     const auth = useAuth();
     user = auth.user;
     logoutMutation = auth.logoutMutation;
-    
-    // Log user state to verify it's null on logout
-    console.log("HEADER user:", user);
   } catch (e) {
     console.log("Auth context not available yet");
   }
-  
-  // Listen for user auth events
-  useEffect(() => {
-    const handleForceLogout = () => {
-      console.log("Force logout event received!");
-      setForceLogout(true);
-      setForceLogin(false);
-      // Force window reload after a short delay if needed
-      setTimeout(() => {
-        window.location.reload();
-      }, 200);
-    };
-    
-    const handleForceLogin = () => {
-      console.log("Force login event received!");
-      setForceLogin(true);
-      setForceLogout(false);
-    };
-    
-    window.addEventListener('user-logout', handleForceLogout);
-    window.addEventListener('user-login', handleForceLogin);
-    
-    return () => {
-      window.removeEventListener('user-logout', handleForceLogout);
-      window.removeEventListener('user-login', handleForceLogin);
-    };
-  }, []);
   
   const handleLogout = () => {
     // Call logout mutation directly - it will clear state before API call
@@ -124,7 +92,7 @@ export default function Header() {
               <span className="sr-only">Toggle theme</span>
             </Button>
 
-            {user && !forceLogout ? (
+            {user ? (
               <>
                 <Link href="/create-listing">
                   <Button>Sell Your Code</Button>
@@ -194,7 +162,7 @@ export default function Header() {
           </div>
           
           <div className="pt-4 pb-3 border-t border-border">
-            {user && !forceLogout ? (
+            {user ? (
               <div>
                 <div className="flex items-center px-4">
                   <div className="flex-shrink-0">
