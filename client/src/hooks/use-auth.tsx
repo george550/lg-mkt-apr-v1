@@ -99,13 +99,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logoutMutation = useMutation({
     mutationFn: async () => {
+      // Immediately clear user data from React state BEFORE the API call
+      queryClient.setQueryData(["/api/user"], null);
+      
+      // Then perform the actual logout request
       const response = await apiRequest("POST", "/api/logout");
       return await response.json();
     },
     onSuccess: () => {
-      // Clear user data from React state
-      queryClient.setQueryData(["/api/user"], null);
-      
       // Invalidate any user-related queries
       queryClient.invalidateQueries({ queryKey: ["/api/user"] });
       

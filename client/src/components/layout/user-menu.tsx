@@ -44,21 +44,8 @@ export function UserMenu({ user }: UserMenuProps) {
   };
 
   const handleLogout = () => {
-    logoutMutation.mutate(undefined, {
-      onSuccess: () => {
-        toast({
-          title: "Logged out successfully",
-          description: "Your session has been ended",
-        });
-      },
-      onError: (error) => {
-        toast({
-          title: "Logout failed",
-          description: error.message || "There was a problem logging you out",
-          variant: "destructive",
-        });
-      }
-    });
+    // Simply call the logoutMutation as we've updated it to clear state first
+    logoutMutation.mutate();
   };
 
   return (

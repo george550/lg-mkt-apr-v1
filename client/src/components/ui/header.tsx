@@ -20,7 +20,7 @@ export default function Header() {
   const [location] = useLocation();
   const { theme, setTheme } = useTheme();
   
-  // Use try-catch for auth context since it might not be available immediately
+  // Use try-catch to safely handle the auth context
   let user = null;
   let logoutMutation = null;
   
@@ -28,12 +28,16 @@ export default function Header() {
     const auth = useAuth();
     user = auth.user;
     logoutMutation = auth.logoutMutation;
+    
+    // Add a console log to confirm user state during logout
+    console.log("Current user state:", user);
   } catch (e) {
     // Auth context not available yet
     console.log("Auth context not available yet");
   }
   
   const handleLogout = () => {
+    // Call logout mutation which now clears state before API call
     if (logoutMutation) {
       logoutMutation.mutate();
     }
