@@ -257,9 +257,30 @@ export function setupAuth(app: Express) {
   );
 
   app.post("/api/logout", (req, res, next) => {
+    // Session cookie name is typically 'connect.sid'
+    const cookieName = 'connect.sid';
+    
     req.logout((err) => {
       if (err) return next(err);
-      res.sendStatus(200);
+      
+      // Destroy the session completely
+      req.session.destroy((sessionErr) => {
+        if (sessionErr) {
+          console.error("Error destroying session:", sessionErr);
+          return next(sessionErr);
+        }
+        
+        // Clear the session cookie with same settings as when it was set
+        res.clearCookie(cookieName, {
+          path: '/',
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: 'lax'
+        });
+        
+        // Return success response
+        res.status(200).json({ ok: true });
+      });
     });
   });
 

@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { UserMenu } from "@/components/layout/user-menu";
+import { LoginButton } from "@/components/layout/login-button";
 import { Menu, X, User, LogOut, Settings, ShoppingCart, Code, Sun, Moon, Laptop } from "lucide-react";
 
 export default function Header() {
@@ -93,12 +94,10 @@ export default function Header() {
                 <Link href="/create-listing">
                   <Button>Sell Your Code</Button>
                 </Link>
-                <UserMenu />
+                <UserMenu user={user} />
               </>
             ) : (
-              <Link href="/auth">
-                <Button>Sign In</Button>
-              </Link>
+              <LoginButton />
             )}
           </div>
           <div className="-mr-2 flex items-center sm:hidden">
