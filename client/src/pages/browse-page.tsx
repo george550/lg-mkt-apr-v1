@@ -82,9 +82,9 @@ export default function BrowsePage() {
             </form>
           </div>
           
-          <div className="flex flex-col lg:flex-row gap-8">
+          <div className="flex flex-col md:flex-row gap-8">
             {/* Filters Sidebar */}
-            <div className="w-full lg:w-64 flex-shrink-0">
+            <div className="w-full md:w-auto flex-shrink-0">
               <div className="sticky top-4">
                 <ListingFilters
                   initialCategoryId={filters.categoryId}
