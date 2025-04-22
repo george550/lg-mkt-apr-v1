@@ -56,7 +56,7 @@ export default function BuyerPurchases() {
   if (error) {
     return (
       <div className="text-center py-12">
-        <p className="text-red-500">Error loading purchases. Please try again later.</p>
+        <p className="text-destructive">Error loading purchases. Please try again later.</p>
       </div>
     );
   }
@@ -64,9 +64,9 @@ export default function BuyerPurchases() {
   if (!purchases || purchases.length === 0) {
     return (
       <div className="text-center py-12">
-        <FileCode className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-        <h3 className="text-lg font-medium text-gray-900 mb-2">No Purchases Yet</h3>
-        <p className="text-gray-500 max-w-md mx-auto mb-6">
+        <FileCode className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+        <h3 className="text-lg font-medium text-foreground mb-2">No Purchases Yet</h3>
+        <p className="text-muted-foreground max-w-md mx-auto mb-6">
           You haven't purchased any templates yet. Browse our marketplace to find templates that suit your needs.
         </p>
         <Link href="/browse">
@@ -80,7 +80,7 @@ export default function BuyerPurchases() {
     <div>
       <div className="mb-6">
         <div className="relative max-w-md">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
           <Input
             type="text"
             placeholder="Search purchases..."
@@ -115,8 +115,8 @@ export default function BuyerPurchases() {
                           className="h-10 w-10 rounded object-cover"
                         />
                       ) : (
-                        <div className="h-10 w-10 rounded bg-gray-200 flex items-center justify-center">
-                          <FileCode className="h-5 w-5 text-gray-500" />
+                        <div className="h-10 w-10 rounded bg-muted flex items-center justify-center">
+                          <FileCode className="h-5 w-5 text-muted-foreground" />
                         </div>
                       )}
                       <div className="truncate">
@@ -131,7 +131,7 @@ export default function BuyerPurchases() {
                   </TableCell>
                   <TableCell>${(purchase.amount / 100).toFixed(2)}</TableCell>
                   <TableCell>
-                    <Badge className="bg-green-100 text-green-800 hover:bg-green-200">
+                    <Badge variant="outline" className="bg-success/10 text-success hover:bg-success/20">
                       {purchase.status || "completed"}
                     </Badge>
                   </TableCell>
@@ -159,7 +159,7 @@ export default function BuyerPurchases() {
         </div>
       ) : (
         <div className="text-center py-8">
-          <p className="text-gray-500">No purchases found matching your search.</p>
+          <p className="text-muted-foreground">No purchases found matching your search.</p>
         </div>
       )}
     </div>

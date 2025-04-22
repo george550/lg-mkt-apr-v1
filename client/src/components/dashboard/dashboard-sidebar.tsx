@@ -10,6 +10,10 @@ import {
   Plus,
   LogOut
 } from "lucide-react";
+import { Card, CardContent, CardHeader, CardFooter } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { cn } from "@/lib/utils";
 
 export default function DashboardSidebar() {
   const [location] = useLocation();
@@ -73,25 +77,27 @@ export default function DashboardSidebar() {
   ];
 
   return (
-    <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+    <Card className="overflow-hidden">
       {/* User info */}
-      <div className="p-4 border-b border-gray-200">
+      <CardHeader className="p-4 border-b">
         <div className="flex items-center space-x-3">
-          <div className="h-10 w-10 rounded-full bg-primary text-white flex items-center justify-center">
-            <span className="font-medium">{user?.username?.[0].toUpperCase() || "U"}</span>
-          </div>
+          <Avatar className="h-10 w-10 bg-primary text-primary-foreground">
+            <AvatarFallback>
+              {user?.username?.[0].toUpperCase() || "U"}
+            </AvatarFallback>
+          </Avatar>
           <div>
-            <p className="font-medium text-gray-900">{user?.username || "User"}</p>
-            <p className="text-xs text-gray-500">{user?.email || ""}</p>
+            <p className="font-medium text-foreground">{user?.username || "User"}</p>
+            <p className="text-xs text-muted-foreground">{user?.email || ""}</p>
           </div>
         </div>
-      </div>
+      </CardHeader>
 
       {/* Navigation */}
-      <nav className="p-4">
+      <CardContent className="p-4">
         {navItems.map((section, idx) => (
           <div key={idx} className="mb-6">
-            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
               {section.label}
             </h3>
             <ul className="space-y-1">
@@ -99,11 +105,12 @@ export default function DashboardSidebar() {
                 <li key={i}>
                   <a
                     href={item.href}
-                    className={`flex items-center px-3 py-2 text-sm rounded-md ${
+                    className={cn(
+                      "flex items-center px-3 py-2 text-sm rounded-md",
                       isActive(item.href)
-                        ? "bg-gray-100 text-primary font-medium"
-                        : "text-gray-700 hover:text-primary hover:bg-gray-50"
-                    }`}
+                        ? "bg-accent text-accent-foreground font-medium"
+                        : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
+                    )}
                   >
                     {item.icon}
                     <span className="ml-3">{item.text}</span>
@@ -113,31 +120,28 @@ export default function DashboardSidebar() {
             </ul>
           </div>
         ))}
-      </nav>
+      </CardContent>
 
       {/* Actions */}
-      <div className="p-4 border-t border-gray-200">
-        <ul className="space-y-2">
-          <li>
-            <a
-              href="/create-listing"
-              className="flex items-center px-3 py-2 text-sm rounded-md text-white bg-primary hover:bg-primary-600"
-            >
-              <Plus className="h-4 w-4" />
-              <span className="ml-3">Create New Listing</span>
-            </a>
-          </li>
-          <li>
-            <button
-              onClick={() => logoutMutation.mutate()}
-              className="flex items-center px-3 py-2 text-sm rounded-md w-full text-left text-gray-700 hover:text-red-600 hover:bg-red-50"
-            >
-              <LogOut className="h-4 w-4" />
-              <span className="ml-3">Log Out</span>
-            </button>
-          </li>
-        </ul>
-      </div>
-    </div>
+      <CardFooter className="p-4 border-t flex flex-col items-stretch">
+        <Button 
+          asChild
+          className="mb-2 flex items-center justify-start"
+        >
+          <a href="/create-listing">
+            <Plus className="h-4 w-4 mr-2" />
+            Create New Listing
+          </a>
+        </Button>
+        <Button
+          variant="outline"
+          onClick={() => logoutMutation.mutate()}
+          className="flex items-center justify-start text-destructive hover:bg-destructive/10 hover:text-destructive"
+        >
+          <LogOut className="h-4 w-4 mr-2" />
+          Log Out
+        </Button>
+      </CardFooter>
+    </Card>
   );
 }

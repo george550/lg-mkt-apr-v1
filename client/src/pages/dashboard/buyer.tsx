@@ -6,6 +6,8 @@ import DashboardSidebar from "@/components/dashboard/dashboard-sidebar";
 import BuyerPurchases from "@/components/dashboard/buyer-purchases";
 import BuyerQuotes from "@/components/dashboard/buyer-quotes";
 import { Helmet } from "react-helmet";
+import { Card, CardContent } from "@/components/ui/card";
+import { Loader2 } from "lucide-react";
 
 export default function BuyerDashboard() {
   const { user, isLoading } = useAuth();
@@ -42,7 +44,7 @@ export default function BuyerDashboard() {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-[60vh]">
-        <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full"></div>
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -54,11 +56,11 @@ export default function BuyerDashboard() {
         <meta name="description" content="Manage your purchases and quote requests" />
       </Helmet>
 
-      <div className="bg-gray-50 min-h-screen">
+      <div className="bg-background min-h-screen">
         <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">Buyer Dashboard</h1>
-            <p className="mt-2 text-gray-600">
+            <h1 className="text-3xl font-bold text-foreground">Buyer Dashboard</h1>
+            <p className="mt-2 text-muted-foreground">
               Manage your purchases and custom quote requests
             </p>
           </div>
@@ -70,26 +72,28 @@ export default function BuyerDashboard() {
             </div>
 
             {/* Main Content */}
-            <div className="flex-1 bg-white rounded-lg shadow-sm p-6">
-              <Tabs
-                value={activeTab}
-                onValueChange={handleTabChange}
-                className="w-full"
-              >
-                <TabsList className="mb-6">
-                  <TabsTrigger value="purchases">My Purchases</TabsTrigger>
-                  <TabsTrigger value="quotes">Quote Requests</TabsTrigger>
-                </TabsList>
+            <Card className="flex-1">
+              <CardContent className="p-6">
+                <Tabs
+                  value={activeTab}
+                  onValueChange={handleTabChange}
+                  className="w-full"
+                >
+                  <TabsList className="mb-6">
+                    <TabsTrigger value="purchases">My Purchases</TabsTrigger>
+                    <TabsTrigger value="quotes">Quote Requests</TabsTrigger>
+                  </TabsList>
 
-                <TabsContent value="purchases">
-                  <BuyerPurchases />
-                </TabsContent>
+                  <TabsContent value="purchases">
+                    <BuyerPurchases />
+                  </TabsContent>
 
-                <TabsContent value="quotes">
-                  <BuyerQuotes />
-                </TabsContent>
-              </Tabs>
-            </div>
+                  <TabsContent value="quotes">
+                    <BuyerQuotes />
+                  </TabsContent>
+                </Tabs>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
