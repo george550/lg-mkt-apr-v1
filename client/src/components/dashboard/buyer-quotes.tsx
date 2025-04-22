@@ -35,10 +35,10 @@ interface ExtendedQuote extends Quote {
 }
 
 const statusColors: Record<string, string> = {
-  pending: "bg-yellow-100 text-yellow-800 hover:bg-yellow-200",
-  accepted: "bg-green-100 text-green-800 hover:bg-green-200",
-  rejected: "bg-red-100 text-red-800 hover:bg-red-200",
-  completed: "bg-blue-100 text-blue-800 hover:bg-blue-200",
+  pending: "bg-warning/10 text-warning hover:bg-warning/20",
+  accepted: "bg-success/10 text-success hover:bg-success/20",
+  rejected: "bg-destructive/10 text-destructive hover:bg-destructive/20",
+  completed: "bg-primary/10 text-primary hover:bg-primary/20",
 };
 
 export default function BuyerQuotes() {
@@ -66,7 +66,7 @@ export default function BuyerQuotes() {
   if (error) {
     return (
       <div className="text-center py-12">
-        <p className="text-red-500">Error loading quote requests. Please try again later.</p>
+        <p className="text-destructive">Error loading quote requests. Please try again later.</p>
       </div>
     );
   }
@@ -74,9 +74,9 @@ export default function BuyerQuotes() {
   if (!quotes || quotes.length === 0) {
     return (
       <div className="text-center py-12">
-        <MessageSquare className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-        <h3 className="text-lg font-medium text-gray-900 mb-2">No Quote Requests</h3>
-        <p className="text-gray-500 max-w-md mx-auto mb-6">
+        <MessageSquare className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+        <h3 className="text-lg font-medium text-foreground mb-2">No Quote Requests</h3>
+        <p className="text-muted-foreground max-w-md mx-auto mb-6">
           You haven't submitted any custom quote requests yet. Browse templates and request custom modifications for your specific needs.
         </p>
         <Link href="/browse">
@@ -90,7 +90,7 @@ export default function BuyerQuotes() {
     <div>
       <div className="mb-6">
         <div className="relative max-w-md">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
           <Input
             type="text"
             placeholder="Search quote requests..."
@@ -126,8 +126,8 @@ export default function BuyerQuotes() {
                           className="h-10 w-10 rounded object-cover"
                         />
                       ) : (
-                        <div className="h-10 w-10 rounded bg-gray-200 flex items-center justify-center">
-                          <MessageSquare className="h-5 w-5 text-gray-500" />
+                        <div className="h-10 w-10 rounded bg-muted flex items-center justify-center">
+                          <MessageSquare className="h-5 w-5 text-muted-foreground" />
                         </div>
                       )}
                       <div className="truncate">
@@ -170,7 +170,7 @@ export default function BuyerQuotes() {
         </div>
       ) : (
         <div className="text-center py-8">
-          <p className="text-gray-500">No quote requests found matching your search.</p>
+          <p className="text-muted-foreground">No quote requests found matching your search.</p>
         </div>
       )}
     </div>

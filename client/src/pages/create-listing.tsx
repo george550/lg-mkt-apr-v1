@@ -191,14 +191,14 @@ export default function CreateListing() {
 
   if (!user) {
     return (
-      <div className="bg-white shadow sm:rounded-lg max-w-2xl mx-auto my-12 p-6">
+      <Card className="max-w-2xl mx-auto my-12 p-6">
         <div className="flex items-center">
           <div className="flex-shrink-0">
-            <AlertTriangle className="h-6 w-6 text-yellow-400" />
+            <AlertTriangle className="h-6 w-6 text-warning" />
           </div>
           <div className="ml-3">
-            <h3 className="text-lg font-medium text-yellow-800">Authentication Required</h3>
-            <div className="mt-2 text-sm text-yellow-700">
+            <h3 className="text-lg font-medium text-foreground">Authentication Required</h3>
+            <div className="mt-2 text-sm text-muted-foreground">
               <p>You need to be signed in to create a listing.</p>
             </div>
             <div className="mt-4">
@@ -206,7 +206,7 @@ export default function CreateListing() {
             </div>
           </div>
         </div>
-      </div>
+      </Card>
     );
   }
 
@@ -217,11 +217,11 @@ export default function CreateListing() {
         <meta name="description" content="Create a new listing to sell your templates and code" />
       </Helmet>
 
-      <div className="bg-gray-50 min-h-screen py-12">
+      <div className="bg-background min-h-screen py-12">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8 text-center">
-            <h1 className="text-3xl font-bold text-gray-900">Create New Listing</h1>
-            <p className="mt-2 text-gray-600">
+            <h1 className="text-3xl font-bold text-foreground">Create New Listing</h1>
+            <p className="mt-2 text-muted-foreground">
               Share your templates and code with developers around the world
             </p>
           </div>
