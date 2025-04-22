@@ -99,6 +99,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logoutMutation = useMutation({
     mutationFn: async () => {
+      // Trigger a global event for immediate UI update before any API call
+      window.dispatchEvent(new Event('user-logout'));
+      
       // FIRST: Immediately clear user data from React state
       queryClient.setQueryData(["/api/user"], null);
       

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,10 +18,10 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useAuth } from "@/hooks/use-auth";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { LogOut, User, ShoppingBag, Package } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
 import { User as UserType } from "@shared/schema";
+import { apiRequest } from "@/lib/queryClient";
 
 interface UserMenuProps {
   user: UserType;
@@ -29,8 +29,8 @@ interface UserMenuProps {
 
 export function UserMenu({ user }: UserMenuProps) {
   const { logoutMutation } = useAuth();
-  const { toast } = useToast();
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [, setLocation] = useLocation();
 
   // Get user initials for avatar fallback
   const initials = user.username
@@ -43,12 +43,25 @@ export function UserMenu({ user }: UserMenuProps) {
     setShowLogoutConfirm(true);
   };
 
-  const handleLogout = () => {
-    // Simply call the logoutMutation directly from context
-    logoutMutation.mutate();
-    
-    // Close the confirmation dialog
-    setShowLogoutConfirm(false);
+  const handleLogout = async () => {
+    try {
+      // Step 1: Directly trigger DOM update via global event
+      window.dispatchEvent(new Event('user-logout'));
+      
+      // Step 2: Close the dialog
+      setShowLogoutConfirm(false);
+      
+      // Step 3: Make the API call directly
+      await apiRequest("POST", "/api/logout");
+      
+      // Step 4: Navigate after a short delay
+      setTimeout(() => {
+        setLocation("/");
+        window.location.reload(); // Force reload just in case
+      }, 100);
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   };
 
   return (
@@ -109,7 +122,7 @@ export function UserMenu({ user }: UserMenuProps) {
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={handleLogout} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-              {logoutMutation.isPending ? "Logging out..." : "Logout"}
+              Logout
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

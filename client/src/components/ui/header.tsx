@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
@@ -19,6 +19,7 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [location] = useLocation();
   const { theme, setTheme } = useTheme();
+  const [forceLogout, setForceLogout] = useState(false);
   
   // Safe way to access auth context
   let user = null;
@@ -34,6 +35,24 @@ export default function Header() {
   } catch (e) {
     console.log("Auth context not available yet");
   }
+  
+  // Listen for user-logout event
+  useEffect(() => {
+    const handleForceLogout = () => {
+      console.log("Force logout event received!");
+      setForceLogout(true);
+      // Force window reload after a short delay if needed
+      setTimeout(() => {
+        window.location.reload();
+      }, 200);
+    };
+    
+    window.addEventListener('user-logout', handleForceLogout);
+    
+    return () => {
+      window.removeEventListener('user-logout', handleForceLogout);
+    };
+  }, []);
   
   const handleLogout = () => {
     // Call logout mutation directly - it will clear state before API call
@@ -95,7 +114,7 @@ export default function Header() {
               <span className="sr-only">Toggle theme</span>
             </Button>
 
-            {user ? (
+            {user && !forceLogout ? (
               <>
                 <Link href="/create-listing">
                   <Button>Sell Your Code</Button>
@@ -165,7 +184,7 @@ export default function Header() {
           </div>
           
           <div className="pt-4 pb-3 border-t border-border">
-            {user ? (
+            {user && !forceLogout ? (
               <div>
                 <div className="flex items-center px-4">
                   <div className="flex-shrink-0">
