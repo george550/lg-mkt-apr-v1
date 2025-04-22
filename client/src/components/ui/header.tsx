@@ -30,10 +30,13 @@ export default function Header() {
     logoutMutation = auth.logoutMutation;
   } catch (e) {
     // Auth context not available yet
+    console.log("Auth context not available yet");
   }
-
+  
   const handleLogout = () => {
-    logoutMutation?.mutate();
+    if (logoutMutation) {
+      logoutMutation.mutate();
+    }
   };
 
   const isActivePath = (path: string) => {
