@@ -19,11 +19,19 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [location] = useLocation();
   const { theme, setTheme } = useTheme();
-  const { user, isLoading, logoutMutation } = useAuth();
+  
+  let auth = null;
+  let user = null;
+  try {
+    auth = useAuth();
+    user = auth.user;
+  } catch (e) {
+    console.error("Auth context not available yet");
+  }
   
   const handleLogout = () => {
-    if (logoutMutation) {
-      logoutMutation.mutate();
+    if (auth && auth.logoutMutation) {
+      auth.logoutMutation.mutate();
     }
   };
 
