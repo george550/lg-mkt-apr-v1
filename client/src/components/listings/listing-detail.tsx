@@ -72,8 +72,8 @@ export default function ListingDetail({ listing }: ListingDetailProps) {
                 </CarouselItem>
               )}
             </CarouselContent>
-            <CarouselPrevious className="left-2" />
-            <CarouselNext className="right-2" />
+            <CarouselPrevious className="left-2 text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600" />
+            <CarouselNext className="right-2 text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600" />
           </Carousel>
         </div>
 
@@ -85,7 +85,7 @@ export default function ListingDetail({ listing }: ListingDetailProps) {
                 key={index}
                 className={`relative w-16 h-16 rounded-md overflow-hidden transition-all ${
                   index === currentImageIndex
-                    ? "ring-2 ring-primary"
+                    ? "ring-2 ring-indigo-600 dark:ring-indigo-500"
                     : "opacity-70 hover:opacity-100"
                 }`}
                 onClick={() => setCurrentImageIndex(index)}
@@ -118,7 +118,7 @@ export default function ListingDetail({ listing }: ListingDetailProps) {
       {/* Right column - Listing details */}
       <div>
         <div className="sticky top-24">
-          <h1 className="text-3xl font-bold mb-2">{listing.title}</h1>
+          <h1 className="text-3xl font-bold mb-2 text-gray-900 dark:text-white">{listing.title}</h1>
           
           <div className="flex items-center gap-4 mb-4">
             {category ? (
@@ -150,31 +150,31 @@ export default function ListingDetail({ listing }: ListingDetailProps) {
                       className={`w-4 h-4 ${
                         i < Math.floor(listing.rating)
                           ? "text-yellow-500"
-                          : "text-muted"
+                          : "text-muted dark:text-gray-500"
                       }`}
                     />
                   ))}
                 </div>
-                <span className="ml-2 text-sm text-muted-foreground">
+                <span className="ml-2 text-sm text-gray-600 dark:text-gray-400">
                   {listing.rating.toFixed(1)} ({listing.reviewCount} reviews)
                 </span>
               </div>
             ) : (
-              <span className="text-sm text-muted-foreground">No ratings yet</span>
+              <span className="text-sm text-gray-600 dark:text-gray-400">No ratings yet</span>
             )}
           </div>
 
-          <div className="text-3xl font-bold mb-6">
+          <div className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
             ${(listing.price / 100).toFixed(2)}
           </div>
 
           {/* Tags */}
           {listing.tags && listing.tags.length > 0 && (
             <div className="mb-6">
-              <h3 className="text-sm font-medium mb-2">Technologies</h3>
+              <h3 className="text-sm font-medium mb-2 text-gray-900 dark:text-white">Technologies</h3>
               <div className="flex flex-wrap gap-2">
                 {listing.tags.map((tag, index) => (
-                  <Badge key={index} variant="secondary">
+                  <Badge key={index} variant="secondary" className="text-gray-700 dark:text-gray-300">
                     {tag}
                   </Badge>
                 ))}
@@ -183,18 +183,18 @@ export default function ListingDetail({ listing }: ListingDetailProps) {
           )}
 
           {/* Seller info */}
-          <Card className="mb-6">
+          <Card className="mb-6 bg-white shadow dark:bg-gray-800 dark:shadow-none">
             <CardContent className="p-4">
-              <h3 className="text-sm font-medium mb-2">About the Seller</h3>
+              <h3 className="text-sm font-medium mb-2 text-gray-900 dark:text-white">About the Seller</h3>
               <div className="flex items-center">
                 <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center">
                   <User className="h-6 w-6" />
                 </div>
                 <div className="ml-3">
-                  <p className="text-sm font-medium">
+                  <p className="text-sm font-medium text-gray-900 dark:text-white">
                     {seller ? seller.username : "Loading..."}
                   </p>
-                  <div className="flex items-center text-xs text-muted-foreground">
+                  <div className="flex items-center text-xs text-gray-600 dark:text-gray-400">
                     <Calendar className="h-3 w-3 mr-1" />
                     <span>
                       {listing.createdAt
@@ -208,9 +208,9 @@ export default function ListingDetail({ listing }: ListingDetailProps) {
           </Card>
 
           {/* What's included */}
-          <div className="mb-6">
-            <h3 className="text-sm font-medium mb-2">What's Included</h3>
-            <ul className="text-sm text-muted-foreground space-y-2">
+          <div className="mb-6 bg-white shadow dark:bg-gray-800 dark:shadow-none p-4 rounded-md">
+            <h3 className="text-sm font-medium mb-2 text-gray-900 dark:text-white">What's Included</h3>
+            <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-2">
               <li className="flex items-center">
                 <CheckCircle className="h-4 w-4 text-primary mr-2" />
                 <span>Full source code</span>

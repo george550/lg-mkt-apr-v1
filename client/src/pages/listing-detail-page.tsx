@@ -84,20 +84,22 @@ export default function ListingDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-[60vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="flex justify-center items-center min-h-[60vh] bg-white dark:bg-gray-900">
+        <Loader2 className="h-8 w-8 animate-spin text-indigo-600 dark:text-indigo-500" />
       </div>
     );
   }
 
   if (isError || !listing) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] px-4">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Listing Not Found</h2>
-        <p className="text-gray-600 mb-6">
+      <div className="flex flex-col items-center justify-center min-h-[60vh] px-4 bg-white dark:bg-gray-900">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Listing Not Found</h2>
+        <p className="text-gray-600 dark:text-gray-400 mb-6">
           The template you're looking for doesn't exist or has been removed.
         </p>
-        <Button onClick={() => navigate("/browse")}>Browse Templates</Button>
+        <Button onClick={() => navigate("/browse")} className="bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600">
+          Browse Templates
+        </Button>
       </div>
     );
   }
@@ -109,13 +111,13 @@ export default function ListingDetailPage() {
         <meta name="description" content={listing.description.substring(0, 160)} />
       </Helmet>
 
-      <div className="bg-white">
+      <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
         <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
           {/* Breadcrumbs */}
-          <nav className="flex mb-6 text-sm text-muted-foreground">
+          <nav className="flex mb-6 text-sm text-gray-600 dark:text-gray-400">
             <ol className="flex items-center space-x-2">
               <li>
-                <Link href="/" className="hover:text-foreground flex items-center">
+                <Link href="/" className="hover:text-gray-900 dark:hover:text-white flex items-center">
                   <Home className="h-4 w-4 mr-1" />
                   <span>Home</span>
                 </Link>
@@ -124,14 +126,14 @@ export default function ListingDetailPage() {
                 <ChevronRight className="h-4 w-4 mx-1" />
                 <Link 
                   href={`/browse?category=${listing.categoryId}`} 
-                  className="hover:text-foreground"
+                  className="hover:text-gray-900 dark:hover:text-white"
                 >
                   Category
                 </Link>
               </li>
               <li className="flex items-center">
                 <ChevronRight className="h-4 w-4 mx-1" />
-                <span className="text-foreground font-medium">{listing.title}</span>
+                <span className="text-gray-900 dark:text-white font-medium">{listing.title}</span>
               </li>
             </ol>
           </nav>
@@ -140,7 +142,7 @@ export default function ListingDetailPage() {
           <ListingDetail listing={listing} />
 
           {/* Tabs Section - Positioned completely below both columns */}
-          <div className="mt-12 border-t border-gray-200 pt-12 col-span-full">
+          <div className="mt-12 border-t border-gray-200 dark:border-gray-700 pt-12 col-span-full">
             <Tabs defaultValue="overview">
               <TabsList className="mb-8">
                 <TabsTrigger value="overview">Overview</TabsTrigger>
@@ -149,14 +151,14 @@ export default function ListingDetailPage() {
                 <TabsTrigger value="related">Related Templates</TabsTrigger>
               </TabsList>
               
-              <TabsContent value="overview" className="prose max-w-none">
-                <h3 className="text-xl font-semibold mb-4">Overview</h3>
-                <p className="text-gray-700 whitespace-pre-line">{listing.description}</p>
+              <TabsContent value="overview" className="prose dark:prose-invert max-w-none">
+                <h3 className="text-xl font-semibold mb-4 dark:text-white">Overview</h3>
+                <p className="text-gray-700 dark:text-gray-300 whitespace-pre-line">{listing.description}</p>
                 
                 {listing.tags && listing.tags.length > 0 && (
                   <div className="mt-6">
-                    <h4 className="text-lg font-medium mb-2">Technologies Used</h4>
-                    <ul className="list-disc list-inside">
+                    <h4 className="text-lg font-medium mb-2 dark:text-white">Technologies Used</h4>
+                    <ul className="list-disc list-inside text-gray-700 dark:text-gray-300">
                       {listing.tags.map((tag, index) => (
                         <li key={index}>{tag}</li>
                       ))}
@@ -166,8 +168,8 @@ export default function ListingDetailPage() {
               </TabsContent>
               
               <TabsContent value="tutorials">
-                <div className="border-l-4 border-yellow-300 bg-yellow-50 p-4">
-                  <p className="text-yellow-800">
+                <div className="border-l-4 border-yellow-300 bg-yellow-50 dark:bg-yellow-900/30 p-4">
+                  <p className="text-yellow-800 dark:text-yellow-200">
                     This template doesn't have any tutorials yet. Check back soon!
                   </p>
                 </div>
@@ -179,8 +181,8 @@ export default function ListingDetailPage() {
                     <p>Reviews will appear here</p>
                   ) : (
                     <div className="text-center py-12">
-                      <h3 className="text-lg font-medium text-gray-900 mb-2">No Reviews Yet</h3>
-                      <p className="text-gray-500 max-w-md mx-auto">
+                      <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No Reviews Yet</h3>
+                      <p className="text-gray-500 dark:text-gray-400 max-w-md mx-auto">
                         This template hasn't received any reviews yet. Be the first to review after purchasing!
                       </p>
                     </div>
@@ -190,8 +192,8 @@ export default function ListingDetailPage() {
               
               <TabsContent value="related">
                 <div className="text-center py-12">
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">Related Templates</h3>
-                  <p className="text-gray-500 max-w-md mx-auto">
+                  <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Related Templates</h3>
+                  <p className="text-gray-500 dark:text-gray-400 max-w-md mx-auto">
                     Related templates will appear here based on this template's category and tags.
                   </p>
                 </div>
@@ -200,11 +202,11 @@ export default function ListingDetailPage() {
           </div>
 
           {/* Purchase Actions */}
-          <div className="mt-12 pt-8 border-t border-gray-200">
+          <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <AlertDialog open={isPaymentModalOpen} onOpenChange={setIsPaymentModalOpen}>
                 <AlertDialogTrigger asChild>
-                  <Button className="w-full sm:w-auto" onClick={handleBuyNow}>
+                  <Button className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600" onClick={handleBuyNow}>
                     Buy Now (${(listing.price / 100).toFixed(2)})
                   </Button>
                 </AlertDialogTrigger>
