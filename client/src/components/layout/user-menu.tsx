@@ -44,8 +44,11 @@ export function UserMenu({ user }: UserMenuProps) {
   };
 
   const handleLogout = () => {
-    // Simply call the logoutMutation as we've updated it to clear state first
+    // Simply call the logoutMutation directly from context
     logoutMutation.mutate();
+    
+    // Close the confirmation dialog
+    setShowLogoutConfirm(false);
   };
 
   return (
