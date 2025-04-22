@@ -129,7 +129,11 @@ export default function Header() {
                 <Link href="/create-listing">
                   <Button>Sell Your Code</Button>
                 </Link>
-                {user && <UserMenu user={user} />}
+                {user ? (
+                  <UserMenu user={user} />
+                ) : (
+                  <div className="h-9 w-9 rounded-full bg-primary/20 animate-pulse"></div>
+                )}
               </>
             ) : (
               <LoginButton />

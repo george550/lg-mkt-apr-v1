@@ -55,15 +55,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const loginMutation = useMutation({
     mutationFn: async (credentials: LoginData) => {
-      // Trigger login event
+      // STEP 1: Trigger login event to immediately update UI
       window.dispatchEvent(new Event('user-login'));
-
-      // Set user data in state
+      
+      // STEP 2: Get user data from server
       const res = await apiRequest("POST", "/api/login", credentials);
-      return await res.json();
+      const userData = await res.json();
+      
+      // STEP 3: Immediately set user data in the query cache
+      queryClient.setQueryData(["/api/user"], userData);
+      
+      return userData;
     },
     onSuccess: (user: User) => {
-      queryClient.setQueryData(["/api/user"], user);
+      // This runs after the user data is already in the cache
       toast({
         title: "Login successful",
         description: `Welcome back, ${user.username}!`,
@@ -81,14 +86,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const registerMutation = useMutation({
     mutationFn: async (credentials: InsertUser) => {
-      // Trigger login event
+      // STEP 1: Trigger login event to immediately update UI
       window.dispatchEvent(new Event('user-login'));
       
+      // STEP 2: Create user on server
       const res = await apiRequest("POST", "/api/register", credentials);
-      return await res.json();
+      const userData = await res.json();
+      
+      // STEP 3: Immediately set user data in the query cache
+      queryClient.setQueryData(["/api/user"], userData);
+      
+      return userData;
     },
     onSuccess: (user: User) => {
-      queryClient.setQueryData(["/api/user"], user);
+      // This runs after the user data is already in the cache
       toast({
         title: "Registration successful",
         description: `Welcome to CodeCraft, ${user.username}!`,
