@@ -124,12 +124,12 @@ export default function Header() {
               <span className="sr-only">Toggle theme</span>
             </Button>
 
-            {(user && !forceLogout) || forceLogin ? (
+            {user && !forceLogout ? (
               <>
                 <Link href="/create-listing">
                   <Button>Sell Your Code</Button>
                 </Link>
-                {user && <UserMenu user={user} />}
+                <UserMenu user={user} />
               </>
             ) : (
               <LoginButton />
@@ -194,9 +194,8 @@ export default function Header() {
           </div>
           
           <div className="pt-4 pb-3 border-t border-border">
-            {((user && !forceLogout) || forceLogin) ? (
+            {user && !forceLogout ? (
               <div>
-                {user && (
                 <div className="flex items-center px-4">
                   <div className="flex-shrink-0">
                     {user.avatar ? (
@@ -216,7 +215,6 @@ export default function Header() {
                     <div className="text-sm font-medium text-muted-foreground">{user.email}</div>
                   </div>
                 </div>
-                )}
                 <div className="mt-3 space-y-1">
                   <Link 
                     href="/dashboard" 
