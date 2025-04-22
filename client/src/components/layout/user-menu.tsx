@@ -21,7 +21,6 @@ import { useAuth } from "@/hooks/use-auth";
 import { Link } from "wouter";
 import { LogOut, User, ShoppingBag, Package } from "lucide-react";
 import { User as UserType } from "@shared/schema";
-import { useToast } from "@/hooks/use-toast";
 
 interface UserMenuProps {
   user: UserType;
@@ -29,7 +28,6 @@ interface UserMenuProps {
 
 export function UserMenu({ user }: UserMenuProps) {
   const { logoutMutation } = useAuth();
-  const { toast } = useToast();
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   // Get user initials for avatar fallback

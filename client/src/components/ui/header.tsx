@@ -19,21 +19,9 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [location] = useLocation();
   const { theme, setTheme } = useTheme();
-  
-  // Safe way to access auth context
-  let user = null;
-  let logoutMutation = null;
-  
-  try {
-    const auth = useAuth();
-    user = auth.user;
-    logoutMutation = auth.logoutMutation;
-  } catch (e) {
-    console.log("Auth context not available yet");
-  }
+  const { user, isLoading, logoutMutation } = useAuth();
   
   const handleLogout = () => {
-    // Call logout mutation directly - it will clear state before API call
     if (logoutMutation) {
       logoutMutation.mutate();
     }

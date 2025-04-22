@@ -3,9 +3,10 @@ import {
   useQuery,
   useMutation,
   UseMutationResult,
+  useQueryClient,
 } from "@tanstack/react-query";
 import { User, InsertUser } from "@shared/schema";
-import { getQueryFn, apiRequest, queryClient } from "../lib/queryClient";
+import { getQueryFn, apiRequest } from "../lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
 
@@ -25,6 +26,7 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
+  const queryClient = useQueryClient();
 
   const {
     data: user,
@@ -32,38 +34,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isLoading,
   } = useQuery<User | null, Error>({
     queryKey: ["/api/user"],
-    queryFn: async ({ queryKey }) => {
-      try {
-        const res = await fetch(queryKey[0] as string, {
-          credentials: "include",
-        });
-        
-        if (res.status === 401) {
-          return null;
-        }
-        
-        if (!res.ok) {
-          throw new Error(`Error: ${res.status}`);
-        }
-        
-        return await res.json();
-      } catch (err) {
-        return null;
-      }
-    },
+    queryFn: getQueryFn({ on401: "returnNull" }),
+    refetchOnMount: true
   });
 
   const loginMutation = useMutation({
     mutationFn: async (credentials: LoginData) => {
-      // Trigger login event
-      window.dispatchEvent(new Event('user-login'));
-
-      // Set user data in state
       const res = await apiRequest("POST", "/api/login", credentials);
       return await res.json();
     },
     onSuccess: (user: User) => {
+      // Immediately update the query data
       queryClient.setQueryData(["/api/user"], user);
+      
       toast({
         title: "Login successful",
         description: `Welcome back, ${user.username}!`,
@@ -81,14 +64,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const registerMutation = useMutation({
     mutationFn: async (credentials: InsertUser) => {
-      // Trigger login event
-      window.dispatchEvent(new Event('user-login'));
-      
       const res = await apiRequest("POST", "/api/register", credentials);
       return await res.json();
     },
     onSuccess: (user: User) => {
+      // Immediately update the query data
       queryClient.setQueryData(["/api/user"], user);
+      
       toast({
         title: "Registration successful",
         description: `Welcome to CodeCraft, ${user.username}!`,
@@ -106,15 +88,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logoutMutation = useMutation({
     mutationFn: async () => {
-      // Trigger a global event for immediate UI update before any API call
-      window.dispatchEvent(new Event('user-logout'));
-      
-      // FIRST: Immediately clear user data from React state
+      // 1. Immediately clear the user data in React Query cache
       queryClient.setQueryData(["/api/user"], null);
       
-      // SECOND: Then perform the actual logout request
-      const response = await apiRequest("POST", "/api/logout");
-      return await response.json();
+      // 2. Notify server
+      await apiRequest("POST", "/api/logout");
+      
+      // 3. Invalidate queries to ensure fresh data on refetch
+      queryClient.invalidateQueries({ queryKey: ["/api/user"] });
     },
     onSuccess: () => {
       toast({
@@ -122,7 +103,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         description: "You have been successfully logged out",
       });
       
-      // Navigate to home page after logout completes
+      // 4. Redirect home
       setLocation("/");
     },
     onError: (error: Error) => {
