@@ -1,3 +1,4 @@
+// client/src/components/listings/listing-grid.tsx
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import ListingCard from "./listing-card";
@@ -28,10 +29,10 @@ export default function ListingGrid({
 
   // Build query string
   let queryString = `/api/listings?limit=${limit}&offset=${offset}`;
-  if (categoryId) queryString += `&category=${categoryId}`;
-  if (priceMin) queryString += `&price_min=${priceMin}`;
-  if (priceMax) queryString += `&price_max=${priceMax}`;
-  if (minRating) queryString += `&rating=${minRating}`;
+  if (categoryId !== undefined) queryString += `&category=${categoryId}`;
+  if (priceMin !== undefined) queryString += `&price_min=${priceMin}`;
+  if (priceMax !== undefined) queryString += `&price_max=${priceMax}`;
+  if (minRating !== undefined) queryString += `&rating=${minRating}`;
   if (searchTerm) queryString += `&search=${encodeURIComponent(searchTerm)}`;
 
   const {
@@ -40,9 +41,8 @@ export default function ListingGrid({
     error,
     refetch,
   } = useQuery<Listing[]>({
-    // key should include the URL so the cache varies correctly
+    // include the full URL in the key so cache varies
     queryKey: ["listings", queryString],
-    // actually fetch from your backend
     queryFn: () =>
       fetch(queryString).then((res) => {
         if (!res.ok) throw new Error("Network response was not ok");
@@ -50,7 +50,7 @@ export default function ListingGrid({
       }),
   });
 
-  // Refetch when filters change
+  // Reset to page 1 whenever filters/search change
   useEffect(() => {
     setPage(1);
     refetch();
@@ -80,11 +80,12 @@ export default function ListingGrid({
   }
 
   if (error) {
-    return <p className="text-center text-destructive">Error loading listings</p>;
+    return (
+      <p className="text-center text-destructive">Error loading listings.</p>
+    );
   }
 
-  // Calculate if we can go to next/prev page
-  const hasMore = listings && listings.length === limit;
+  const hasMore = listings?.length === limit;
   const hasPrevious = page > 1;
 
   return (
@@ -99,35 +100,33 @@ export default function ListingGrid({
 
           {/* Pagination */}
           <div className="flex justify-center mt-8">
-            <div className="flex items-center space-x-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setPage(page - 1)}
-                disabled={!hasPrevious}
-              >
-                <ChevronLeft className="h-4 w-4 mr-1" />
-                Previous
-              </Button>
-              <span className="text-sm text-muted-foreground">Page {page}</span>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setPage(page + 1)}
-                disabled={!hasMore}
-              >
-                Next
-                <ChevronRight className="h-4 w-4 ml-1" />
-              </Button>
-            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage(page - 1)}
+              disabled={!hasPrevious}
+            >
+              <ChevronLeft className="h-4 w-4 mr-1" />
+              Previous
+            </Button>
+            <span className="text-sm text-muted-foreground">Page {page}</span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage(page + 1)}
+              disabled={!hasMore}
+            >
+              Next
+              <ChevronRight className="h-4 w-4 ml-1" />
+            </Button>
           </div>
         </>
       ) : (
         <div className="text-center py-12 px-4">
-          <h3 className="text-lg font-medium text-foreground mb-2">
+          <h3 className="text-lg font-medium text-primary">
             No listings found
           </h3>
-          <p className="text-muted-foreground">
+          <p className="text-secondary">
             Try adjusting your filters or search terms.
           </p>
         </div>

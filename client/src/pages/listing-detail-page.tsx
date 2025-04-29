@@ -5,21 +5,8 @@ import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
 import { Listing } from "@shared/schema";
 import ListingDetail from "@/components/listings/listing-detail";
-import PaymentForm from "@/components/checkout/payment-form";
-import QuoteForm from "@/components/quote/quote-form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import { Helmet } from "react-helmet";
 import { Loader2, ChevronRight, Home } from "lucide-react";
 
@@ -30,8 +17,8 @@ export default function ListingDetailPage() {
   const { user } = useAuth();
   const { toast } = useToast();
   
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
-  const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
+//  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+//  const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
 
   const {
     data: listing,
@@ -42,6 +29,31 @@ export default function ListingDetailPage() {
     queryKey: [`/api/listings/${numericId}`],
     enabled: !isNaN(numericId),
   });
+
+  // After your `useQuery` block, add:
+  const [loading, setLoading] = useState(false);
+
+  async function handleBuy() {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ listingId: listing.id }),
+      });
+      const { url } = await res.json();
+      window.location.href = url;
+    } catch (err) {
+      console.error("Checkout error:", err);
+      setLoading(false);
+      toast({
+        title: "Purchase failed",
+        description: "There was a problem starting checkout. Please try again.",
+        variant: "destructive",
+      });
+    }
+  }
+  
 
   useEffect(() => {
     if (isNaN(numericId)) {
@@ -54,7 +66,7 @@ export default function ListingDetailPage() {
     }
   }, [numericId, navigate, toast]);
 
-  const handleBuyNow = () => {
+ /* const handleBuyNow = () => {
     if (!user) {
       toast({
         title: "Authentication required",
@@ -64,9 +76,11 @@ export default function ListingDetailPage() {
       navigate("/auth");
       return;
     }
+  
     
     setIsPaymentModalOpen(true);
   };
+  
 
   const handleRequestQuote = () => {
     if (!user) {
@@ -81,6 +95,8 @@ export default function ListingDetailPage() {
     
     setIsQuoteModalOpen(true);
   };
+
+  */
 
   if (isLoading) {
     return (
@@ -202,46 +218,14 @@ export default function ListingDetailPage() {
           </div>
 
           {/* Purchase Actions */}
-          <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <AlertDialog open={isPaymentModalOpen} onOpenChange={setIsPaymentModalOpen}>
-                <AlertDialogTrigger asChild>
-                  <Button className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600" onClick={handleBuyNow}>
-                    Buy Now (${(listing.price / 100).toFixed(2)})
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent className="max-w-md">
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Complete Your Purchase</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      You're purchasing {listing.title} for ${(listing.price / 100).toFixed(2)}.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <PaymentForm listingId={listing.id} onSuccess={() => setIsPaymentModalOpen(false)} price={listing.price} />
-                </AlertDialogContent>
-              </AlertDialog>
-
-              <AlertDialog open={isQuoteModalOpen} onOpenChange={setIsQuoteModalOpen}>
-                <AlertDialogTrigger asChild>
-                  <Button variant="outline" className="w-full sm:w-auto" onClick={handleRequestQuote}>
-                    Request Custom Quote
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent className="max-w-md">
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Request a Custom Quote</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Tell the creator what custom features or modifications you need.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <QuoteForm 
-                    listingId={listing.id} 
-                    sellerId={listing.sellerId} 
-                    onSuccess={() => setIsQuoteModalOpen(false)} 
-                  />
-                </AlertDialogContent>
-              </AlertDialog>
-            </div>
+          <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700 flex justify-center">
+            <Button
+              onClick={handleBuy}
+              disabled={loading}
+              className="bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600"
+            >
+              {loading ? "Redirecting…" : `Buy Now $${(listing.price/100).toFixed(2)}`}
+            </Button>
           </div>
         </div>
       </div>

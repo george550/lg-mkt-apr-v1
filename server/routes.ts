@@ -17,6 +17,9 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2023-10-16' as any,
 });
 
+
+ 
+
 import anthropicService from "./services/anthropic";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -280,6 +283,55 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(earnings);
     } catch (error) {
       res.status(500).json({ message: "Error fetching earnings" });
+    }
+  });
+
+  // Stripe checkout route
+  app.post("/api/checkout", async (req: Request, res: Response) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    try {
+      const { listingId } = req.body;
+      if (!listingId) {
+        return res.status(400).json({ message: "Missing listingId" });
+      }
+
+      // Lookup the listing to get price and title
+      const listing = await storage.getListingById(Number(listingId));
+      if (!listing || !listing.price || listing.price <= 0) {
+        return res.status(400).json({ message: "Invalid listing or price" });
+      }
+
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        line_items: [
+          {
+            price_data: {
+              currency: "usd",
+              product_data: { name: listing.title },
+              // listing.price is in cents
+              unit_amount: listing.price,
+            },
+            quantity: 1,
+          },
+        ],
+        mode: "payment",
+        // redirect back to your client on success/cancel
+        success_url: `${process.env.CLIENT_URL}/listing-success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${process.env.CLIENT_URL}/listing/${listing.id}`,
+        metadata: {
+          listingId: listing.id.toString(),
+          buyerId: req.user.id.toString(),
+          sellerId: listing.sellerId.toString(),
+        },
+      });
+
+      res.json({ url: session.url });
+    } catch (err) {
+      console.error("Checkout session error:", err);
+      res.status(500).json({ message: "Failed to create checkout session" });
     }
   });
 
