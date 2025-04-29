@@ -1,32 +1,32 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+// import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 import themePlugin from "@replit/vite-plugin-shadcn-theme-json";
 import path from "path";
-import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 
 export default defineConfig({
   plugins: [
     react(),
-    runtimeErrorOverlay(),
+    // runtimeErrorOverlay(),   ← removed to let real errors surface
     themePlugin(),
     ...(process.env.NODE_ENV !== "production" &&
     process.env.REPL_ID !== undefined
       ? [
-          await import("@replit/vite-plugin-cartographer").then((m) =>
-            m.cartographer(),
-          ),
+          // @ts-ignore
+          (await import("@replit/vite-plugin-cartographer")).cartographer(),
         ]
       : []),
   ],
 
-  // ← add this:
   server: {
     proxy: {
-      // proxy all /api requests to your Express server
       "/api": {
         target: "http://localhost:5000",
         changeOrigin: true,
       },
+    },
+    hmr: {
+      overlay: false, // disable Vite’s built-in error overlay
     },
   },
 
@@ -37,6 +37,7 @@ export default defineConfig({
       "@assets": path.resolve(import.meta.dirname, "attached_assets"),
     },
   },
+
   root: path.resolve(import.meta.dirname, "client"),
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
