@@ -18,6 +18,18 @@ export default defineConfig({
         ]
       : []),
   ],
+
+  // ← add this:
+  server: {
+    proxy: {
+      // proxy all /api requests to your Express server
+      "/api": {
+        target: "http://localhost:5000",
+        changeOrigin: true,
+      },
+    },
+  },
+
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "client", "src"),

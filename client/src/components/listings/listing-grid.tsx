@@ -38,9 +38,16 @@ export default function ListingGrid({
     data: listings,
     isLoading,
     error,
-    refetch
+    refetch,
   } = useQuery<Listing[]>({
-    queryKey: [queryString],
+    // key should include the URL so the cache varies correctly
+    queryKey: ["listings", queryString],
+    // actually fetch from your backend
+    queryFn: () =>
+      fetch(queryString).then((res) => {
+        if (!res.ok) throw new Error("Network response was not ok");
+        return res.json();
+      }),
   });
 
   // Refetch when filters change
@@ -73,7 +80,7 @@ export default function ListingGrid({
   }
 
   if (error) {
-    return <p className="text-center text-red-500">Error loading listings</p>;
+    return <p className="text-center text-destructive">Error loading listings</p>;
   }
 
   // Calculate if we can go to next/prev page
@@ -89,7 +96,7 @@ export default function ListingGrid({
               <ListingCard key={listing.id} listing={listing} />
             ))}
           </div>
-          
+
           {/* Pagination */}
           <div className="flex justify-center mt-8">
             <div className="flex items-center space-x-2">
@@ -102,9 +109,7 @@ export default function ListingGrid({
                 <ChevronLeft className="h-4 w-4 mr-1" />
                 Previous
               </Button>
-              <span className="text-sm text-gray-600">
-                Page {page}
-              </span>
+              <span className="text-sm text-muted-foreground">Page {page}</span>
               <Button
                 variant="outline"
                 size="sm"
@@ -119,8 +124,10 @@ export default function ListingGrid({
         </>
       ) : (
         <div className="text-center py-12 px-4">
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No listings found</h3>
-          <p className="text-gray-500">
+          <h3 className="text-lg font-medium text-foreground mb-2">
+            No listings found
+          </h3>
+          <p className="text-muted-foreground">
             Try adjusting your filters or search terms.
           </p>
         </div>
